@@ -1,0 +1,70 @@
+---
+import LogoMobile from '../assets/logo-mobile.svg'
+import BurgerButton from '../components/BurgerButton.astro'
+---
+
+
+<header class="Header">
+    <div class="Header__content">
+        <img class="Header__content__logo" src={LogoMobile.src} alt="Logo" />
+        <div id="BurgerButton" class="Header__content__button"><BurgerButton /></div>
+        <nav id="Navigation" class="Header__content__navigation">
+            <ul class="Header__content__navigation__list">
+                <li class="Header__content__navigation__list__item"><a>Travaux</a></li>
+                <li class="Header__content__navigation__list__item"><a>À propos</a></li>
+                <li class="Header__content__navigation__list__item"><a>Contact</a></li>
+                <li class="Header__content__navigation__list__item"><a>L'Atelier</a></li>
+            </ul>
+        </nav>
+    </div>
+
+</header>
+
+
+
+<style lang="scss">
+    .Header {
+        &__content {
+            display: flex;
+            padding-top: 1rem;
+            justify-content: space-between;
+            align-items: center;
+          &__logo, &__button {
+            z-index: 101;
+          }
+
+          &__navigation {
+            position: absolute;
+            width: 100vw;
+            height: 100vh;
+            top: 0;
+            left: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: var(--background-color);
+            z-index: 100;
+            transform: translateX(100%);
+            transition: transform 0.5s;
+            &__list {
+              &__item {
+                font-size: 1.4rem;
+                margin: 2rem 0;
+              }
+            }
+          }
+        }
+    }
+
+    .is-active {
+      transform: translateX(0);
+    }
+</style>
+
+<script>
+    const burgerButton = document.querySelector('#BurgerButton');
+    const navigation = document.querySelector('#Navigation');
+    burgerButton.addEventListener('click', e => {
+        navigation.classList.toggle('is-active');
+    })
+</script>
