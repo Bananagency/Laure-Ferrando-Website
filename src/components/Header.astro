@@ -1,0 +1,119 @@
+---
+import LogoMobile from '../assets/logo-mobile.svg'
+import BurgerButton from '../components/BurgerButton.astro'
+---
+
+
+<header class="Header">
+    <div class="Header__content">
+        <img class="Header__content__logo" src={LogoMobile.src} alt="Logo" />
+        <div id="BurgerButton" class="Header__content__button"><BurgerButton /></div>
+        <nav id="Navigation" class="Header__content__navigation">
+            <ul class="Header__content__navigation__list">
+                <li class="Header__content__navigation__list__item"><a>Travaux</a></li>
+                <li class="Header__content__navigation__list__item"><a>À propos</a></li>
+                <li class="Header__content__navigation__list__item"><a>Contact</a></li>
+                <li class="Header__content__navigation__list__item"><a>L'Atelier</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+
+
+<style lang="scss">
+    .Header {
+        &__content {
+            display: flex;
+            padding-top: 1rem;
+            justify-content: space-between;
+            align-items: center;
+          &__logo, &__button {
+            z-index: 101;
+          }
+          &__navigation {
+            position: absolute;
+            height: 100%;
+            width: 100%;
+            top: 0;
+            left: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: var(--background-color);
+            z-index: 100;
+            transform: translateY(-100%);
+            transition: transform 0.3s, opacity 0.5s;
+            opacity: 0;
+            &__list {
+              &__item {
+                font-size: 1.2rem;
+                margin: 2rem 0;
+                transition: transform .3s ease, opacity .5s ease;
+                opacity: 0;
+                transform: translateX(100%);
+                transition-delay: .3s;
+                &:nth-child(2) {
+                  transition-delay: .4s;
+                }
+                &:nth-child(3) {
+                  transition-delay: .5s;
+                }
+                &:nth-child(4) {
+                  transition-delay: .6s;
+                }
+              }
+            }
+          }
+        }
+    }
+
+    .is-active {
+      transform: translateX(0);
+      opacity: 1;
+    }
+
+
+
+      @media screen and (min-width: 992px) {
+        .Header {
+          &__content {
+            &__button {
+              display: none;
+            }
+            &__navigation {
+              position: initial;
+              height: initial;
+              transform: translateX(0);
+              opacity: 1;
+              width: 100%;
+              justify-content: flex-end;
+              &__list {
+                display: flex;
+                &__item {
+                  opacity: 1;
+                  width: max-content;
+                  transform: translateX(0);
+                  &:not(:first-child) {
+                    padding-left: 3rem;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+
+</style>
+
+<script>
+    const burgerButton = document.querySelector('#BurgerButton');
+    const navigation = document.querySelector('#Navigation');
+    const navItems = navigation.querySelectorAll('.Header__content__navigation__list__item');
+    burgerButton.addEventListener('click', () => {
+        navigation.classList.toggle('is-active');
+        navItems.forEach(item => {
+            item.classList.toggle('is-active');
+        })
+    })
+</script>
