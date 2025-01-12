@@ -31,7 +31,6 @@ import BurgerButton from '../components/BurgerButton.astro'
           &__logo, &__button {
             z-index: 101;
           }
-
           &__navigation {
             position: absolute;
             height: 100%;
@@ -48,7 +47,7 @@ import BurgerButton from '../components/BurgerButton.astro'
             opacity: 0;
             &__list {
               &__item {
-                font-size: 1.4rem;
+                font-size: 1.2rem;
                 margin: 2rem 0;
                 transition: transform .3s ease, opacity .5s ease;
                 opacity: 0;
@@ -73,6 +72,38 @@ import BurgerButton from '../components/BurgerButton.astro'
       transform: translateX(0);
       opacity: 1;
     }
+
+
+
+      @media screen and (min-width: 992px) {
+        .Header {
+          &__content {
+            &__button {
+              display: none;
+            }
+            &__navigation {
+              position: initial;
+              height: initial;
+              transform: translateX(0);
+              opacity: 1;
+              width: 100%;
+              justify-content: flex-end;
+              &__list {
+                display: flex;
+                &__item {
+                  opacity: 1;
+                  width: max-content;
+                  transform: translateX(0);
+                  &:not(:first-child) {
+                    padding-left: 3rem;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+
 </style>
 
 <script>
