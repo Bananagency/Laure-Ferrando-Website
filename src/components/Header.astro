@@ -17,7 +17,6 @@ import BurgerButton from '../components/BurgerButton.astro'
             </ul>
         </nav>
     </div>
-
 </header>
 
 
@@ -35,8 +34,8 @@ import BurgerButton from '../components/BurgerButton.astro'
 
           &__navigation {
             position: absolute;
-            width: 100vw;
-            height: 100vh;
+            height: 100%;
+            width: 100%;
             top: 0;
             left: 0;
             display: flex;
@@ -44,7 +43,7 @@ import BurgerButton from '../components/BurgerButton.astro'
             align-items: center;
             background-color: var(--background-color);
             z-index: 100;
-            transform: translateX(100%);
+            transform: translateY(-100%);
             transition: transform 0.3s, opacity 0.5s;
             opacity: 0;
             &__list {
@@ -54,11 +53,12 @@ import BurgerButton from '../components/BurgerButton.astro'
                 transition: transform .3s ease, opacity .5s ease;
                 opacity: 0;
                 transform: translateX(100%);
+                transition-delay: .3s;
                 &:nth-child(2) {
-                  transition-delay: .2s;
+                  transition-delay: .4s;
                 }
                 &:nth-child(3) {
-                  transition-delay: .4s;
+                  transition-delay: .5s;
                 }
                 &:nth-child(4) {
                   transition-delay: .6s;
@@ -79,7 +79,7 @@ import BurgerButton from '../components/BurgerButton.astro'
     const burgerButton = document.querySelector('#BurgerButton');
     const navigation = document.querySelector('#Navigation');
     const navItems = navigation.querySelectorAll('.Header__content__navigation__list__item');
-    burgerButton.addEventListener('click', e => {
+    burgerButton.addEventListener('click', () => {
         navigation.classList.toggle('is-active');
         navItems.forEach(item => {
             item.classList.toggle('is-active');
