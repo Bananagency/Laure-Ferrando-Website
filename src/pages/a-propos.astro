@@ -1,0 +1,119 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout>
+    <div class="divider">
+    <main class="About">
+        <h1 class="About__title">Parcours</h1>
+        <p class="About__paragraph">
+            Laure Ferrando est né dans le sud de la France à Aix-en-Provence en
+            1976. En 2001 elle obtient une licence d'Arts plastiques de
+            l’Université Paris I Sorbonne.
+        </p>
+        <p class="About__paragraph">
+            Après avoir travaillé 10 ans dans l'horticulture, elle s'oriente
+            vers l’agencement d’intérieur conjuguant une vie professionnelle
+            riche avec le développement de son univers artistique.<br />
+            En 2019, elle installe son atelier en Dordogne. Désireuse d'approfondir
+            son expertise dans le domaine de la céramique.Elle intègre en 2023 l’Institut
+            Européen des Arts Céramique de Guebwiller (l’IEAC) et obtiens la certification
+            'Créateur en Arts Céramique'.
+        </p>
+        <p class="About__paragraph">
+            Privilégiant le grès et la porcelaine comme médium elle poursuit son
+            travail de compositions murales tout en développant des objets plus
+            sculpturaux présentés sous forme d'installation. En parallèle elle
+            développe une collection d'objets utilitaires : Froufrou et dentelle
+            signe cet univers aux lignes résolument féminines et contemporaines.
+            <br />
+            Le Travail de Laure Ferrando est profondément enraciné dans une réflexion
+            sur les enjeux sociétaux, ce qui donne à ses créations une dimension
+            intellectuelle et symbolique forte.
+        </p>
+        <p class="About__paragraph">
+            Son univers, profondément décoratif et féminin, prend forme dans des
+            compositions où l'accumulation devient un véritable langage. Chaque
+            fragment, chute ou détail, trouve sa place et son sens dans l’espace
+            choisi du tableau. Une métaphore des enjeux sociétaux liés à
+            l'individualisme, à l'anonymat et au concept de masse. Dans sa
+            pratique sculpturale, cette réflexion prend forme à travers le
+            fac-similé et l'exploration de l'objet, conçu comme un
+            objet-hybride, fantasmagorique ou surréaliste. En s'affranchissant
+            de leur fonction initiale, ces objets sculpturaux interrogent les
+            frontières entre l'individu et sa fonction sociale dans une société
+            profondément normée. Ils symbolisent le désir d'échapper à certaines
+            contraintes tout en révélant la fragilité de cette tentative. Ils
+            offrent une voie pour explorer des thématiques telles que la liberté
+            individuelle, le besoin de protection et des limites imposées par le
+            milieu social.
+        </p>
+        <p class="About__paragraph">
+            La mise en espace de ces objets sculpturaux ouvre la voie à une
+            narration. De leur accumulation et de leurs interactions émergent un
+            sens inédit. Les notions de propriété, de liberté, de pouvoir et de
+            destin y sont sans cesse revisitées, interrogeant les mécanismes de
+            l’interaction humaine.
+        </p>
+        <div class="About__expositions">
+            <h2 class="About__expositions__title">Expositions</h2>
+            <ul class="About__expositions__list">
+                <li class="About__expositions__list__item">
+                    <h3 class="About__expositions__list__item__title">Galerie Bim’art (Saint Laurent sur Manoire)</h3>
+                    <p class="About__expositions__list__item__title">du 18 mars au 2 avril 2023</p>
+                </li>
+                <li class="About__expositions__list__item">
+                    <h3 class="About__expositions__list__item__title">Galerie L’appart (Périgueux)</h3>
+                    <p class="About__expositions__list__item__title">du 9 au 14 janvier 2023</p>
+                </li>
+                <li class="About__expositions__list__item">
+                    <h3 class="About__expositions__list__item__title">Galerie L’Appart (Périgueux)</h3>
+                    <p class="About__expositions__list__item__title">du 7 au 19 février 2022</p>
+                </li>
+            </ul>
+        </div>
+    </main>
+    <aside class="About__image">
+        <img src="https://laure-ferrando.com/wp-content/uploads/2023/03/photo-laure.jpg" alt="Photo de Laure Ferrando">
+    </aside>
+</div>
+</Layout>
+
+<style lang="scss">
+    .About {
+        padding: 2rem;
+        &__paragraph {
+            margin: 1rem 0;
+
+        }
+        &__expositions {
+            &__list {
+                &__item {
+                    margin: 1rem 0;
+                }
+            }
+        }
+        &__image {
+            padding: 0 2rem;
+            max-width: 480px;
+            margin: 0 auto;
+            img {
+                width: 100%;
+            }
+        }
+    }
+    @media screen and (min-width: 992px) {
+        .divider {
+            display: flex;
+            max-width: 880px;
+            margin: 4rem auto;
+            gap: 2rem;
+            .About {
+                padding: 0;
+                &__image {
+                    min-width: 400px;
+                }
+            }
+        }
+    }
+</style>
