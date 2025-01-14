@@ -95,8 +95,24 @@ import Layout from "../layouts/Layout.astro";
         }
         &__image {
             padding: 0 2rem;
+            max-width: 480px;
+            margin: 0 auto;
             img {
                 width: 100%;
+            }
+        }
+    }
+    @media screen and (min-width: 992px) {
+        .divider {
+            display: flex;
+            max-width: 880px;
+            margin: 4rem auto;
+            gap: 2rem;
+            .About {
+                padding: 0;
+                &__image {
+                    min-width: 400px;
+                }
             }
         }
     }
