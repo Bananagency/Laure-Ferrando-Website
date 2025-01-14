@@ -9,9 +9,12 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@astrojs/vue": "^5.0.4",
     "@fontsource/lato": "^5.1.1",
     "@fontsource/libre-baskerville": "^5.1.1",
     "astro": "^5.1.5",
-    "sass": "^1.83.1"
+    "sass": "^1.83.1",
+    "swiper": "^11.2.1",
+    "vue": "^3.5.13"
   }
 }
