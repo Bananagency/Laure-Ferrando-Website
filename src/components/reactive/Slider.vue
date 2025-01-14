@@ -1,5 +1,5 @@
 <template>
-<swiper-container space-between="10" free-mode="true" slides-per-view="1.2">
+<swiper-container free-mode="true" id="mySwiper">
   <swiper-slide><img src="https://picsum.photos/400/500"></swiper-slide>
   <swiper-slide><img src="https://picsum.photos/400/500"></swiper-slide>
   <swiper-slide><img src="https://picsum.photos/400/500"></swiper-slide>
@@ -11,13 +11,48 @@
 </template>
 
 <script>
-// import function to register Swiper custom elements
-import { register } from 'swiper/element/bundle';
-// register Swiper custom elements
+import { register } from "swiper/element/bundle";
+
+import { FreeMode } from "swiper/modules";
 register();
+
+export default {
+  mounted() {
+    const swiperEl = document.querySelector("#mySwiper");
+
+    Object.assign(swiperEl, {
+      
+      breakpoints: {
+        0: {
+          slidesPerView: 1.2,
+          spaceBetween: 10,
+        },
+        380 : {
+          slidesPerView: 1.5,
+          spaceBetween: 10,
+        },
+        640: {
+          slidesPerView: 2,
+          spaceBetween: 10
+        },
+        768: {
+          slidesPerView: 3,
+          spaceBetween: 10
+        },
+        1296: {
+          slidesPerView: 4,
+          spaceBetween: 10
+        }
+      },
+    });
+
+    // Initialiser Swiper
+    swiperEl.initialize();
+  },
+};
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
     swiper-container {
         margin: 2rem 0;
         padding: 0 -2rem;
