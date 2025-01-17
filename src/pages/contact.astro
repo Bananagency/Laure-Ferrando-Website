@@ -1,0 +1,142 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout>
+    <main class="Contact">
+        <section class="Contact__infos">
+            <div class="Contact__infos__topic">
+                <h1 class="Contact__infos__topic__title">Contactez-moi</h1>
+                <p class="Contact__infos__topic__text">
+                    Lorem, ipsum dolor sit amet consectetur adipisicing elit.
+                    Fugiat laudantium illo vero excepturi totam blanditiis sint
+                    maxime pariatur. Vitae temporibus tempore, culpa numquam quo
+                    debitis cupiditate laboriosam vero. Praesentium omnis ab
+                    nihil aspernatur, fugiat magni iure. Suscipit quibusdam,
+                    molestiae, quo perferendis error omnis maiores, tenetur
+                    animi at dignissimos veritatis iste!
+                </p>
+            </div>
+            <div class="Contact__infos__topic">
+                <ul class="Contact__infos__topic__list">
+                    <li class="Contact__infos__topic__list__item">
+                        <h2 class="Contact__infos__topic__list__item__title">Téléphone</h2>
+                        <a href="tel:0123456789" class="Contact__infos__topic__list__item__link">0123456789</a>
+                    </li>
+                    <li class="Contact__infos__topic__list__item">
+                        <h2 class="Contact__infos__topic__list__item__title">E-mail
+
+                        </h2>
+                        <a href="mailto:contact@laure-ferrando.com" class="Contact__infos__topic__list__item__link">contac@laure-ferrando.com</a>
+                    </li>
+                    <li class="Contact__infos__topic__list__item">
+                        <h2 class="Contact__infos__topic__list__item__title">Adresse</h2>
+                        <a href="" class="Contact__infos__topic__list__item__link">22 rue du Temple, 24500 Eymet</a>
+                    </li>
+                </ul>
+            </div>
+        </section>
+        <section class="Contact__form">
+            <form action="submit">
+                <div class="Contact__form__topic">
+                    <label for="name">Nom</label>
+                    <input type="text" name="name" id="name" required>
+                </div>
+                <div class="Contact__form__topic">
+                    <label for="surname">Prénom</label>
+                    <input type="text" name="surname" id="surname" required>
+                </div>
+                <div class="Contact__form__topic">
+                    <label for="email">Adresse mail</label>
+                    <input type="text" name="email" id="email" required>
+                </div>
+                <div class="Contact__form__topic">
+                    <label for="subject">Sujet</label>
+                    <input type="text" name="subject" id="subject" required>
+                </div>
+                <div class="Contact__form__topic">
+                    <label for="message">Message</label>
+                    <textarea name="message" id="message"></textarea>
+                </div>
+                <button class="Contact__form__button">Envoyer</button>
+            </form>
+        </section>
+    </main>
+</Layout>
+
+<style lang="scss">
+    .Contact {
+        padding: 2rem;
+        &__infos {
+            &__topic {
+                margin-bottom: 2rem;
+                &__title {
+                    font-size: 1rem;
+                    margin-bottom: 1rem;
+                }
+                &__text {
+                    font-size: .9rem;
+                    font-weight: 300;
+                }
+                &__list {
+                    &__item {
+                        margin: 1rem 0;
+                        &__title {
+                            font-size: 1rem;
+                        }
+                    }
+                }
+            }
+        }
+        &__form {
+            display: flex;
+            flex-direction: column;
+            &__topic {
+                display: flex;
+                flex-direction: column;
+                margin-bottom: 1rem;
+                gap: .25rem;
+                input, textarea {
+                    border: none;
+                    font-size: 1rem;
+                    padding: 0 .5rem;
+                }
+                input {
+                    height: 2.5rem;
+                }
+                textarea {
+                    height: 10rem;
+                    resize: none;
+                }
+            }
+            &__button {
+                border: none;
+                background-color: var(--accent-color);
+                color: var(--background-color);
+                font-size: 1rem;
+                padding: .5rem 1.5rem;
+                width: 100%;
+                transition: all .3s ease;
+                cursor: pointer;
+                &:hover {
+                    background-color: var(--text-color);
+                }
+            }
+        }
+    }
+
+    @media screen and (min-width: 992px) {
+        .Contact {
+            display: flex;
+            max-width: 880px;
+            margin: 4rem auto;
+            gap: 2rem;
+            &__form {
+                min-width: 420px;
+                &__button {
+                    width: max-content;
+                }
+            }
+        }
+    }
+</style>
