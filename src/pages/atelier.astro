@@ -1,0 +1,186 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout>
+    <main class="Atelier">
+        <div class="Atelier__infos">
+            <img class="Atelier__image" src="l-atelier.jpg" alt="">
+            <div class="Atelier__infos__aside">
+                <div class="Atelier__infos__topic">
+                    <h1 class="Atelier__infos__topic__title">L'atelier</h1>
+                    <p class="Atelier__infos__topic__text">
+                        Mon atelier se situe en Dordogne. J’y élabore tableaux et
+                        sculptures mais également une ligne d’objets décoratifs pour
+                        l’habitat. Chaque pièce, est réalisée à la main ou tournée
+                        au tour. J’apporte un soin particulier à chacune de mes
+                        créations: Des pièces uniques ou produites en petites
+                        séries. L’atelier est ouvert sur rendez-vous.
+                    </p>
+                </div>
+                <div class="Atelier__infos__topic">
+                    <ul class="Atelier__infos__topic__list">
+                        <li class="Atelier__infos__topic__list__item">
+                            <h2 class="Atelier__infos__topic__list__item__title">
+                                Adresse
+                            </h2>
+                            <a
+                                href=""
+                                class="Atelier__infos__topic__list__item__link"
+                                >22 rue du Temple, 24500 Eymet</a
+                            >
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="Atelier__cours">
+            <div class="Atelier__infos__topic">
+                <h2 class="Atelier__infos__topic__title">Les cours</h2>
+                <p class="Atelier__infos__topic__text">
+                    Lorem ipsum dolor sit amet consectetur, adipisicing elit.
+                    Facere eos quo ipsa voluptatum, reprehenderit harum sequi
+                    laborum, voluptas odio, ipsam debitis tempore animi. Atque
+                    quia aliquid eaque necessitatibus. Dolore, tempore?
+                </p>
+            </div>
+            <div class="Atelier__infos__formula">
+                <div class="Atelier__infos__formula__square">
+                    <h3 class="Atelier__infos__formula__square__title">
+                        Formule 1
+                    </h3>
+                    <h4 class="Atelier__infos__formula__square__price">
+                        Tarif : 50€
+                    </h4>
+                    <p class="Atelier__infos__formula__square__text">
+                        Mon atelier se situe en Dordogne. J’y élabore tableaux
+                        et sculptures mais également une ligne d’objets
+                        décoratifs pour l’habitat. Chaque pièce, est réalisée à
+                        la main ou tournée au tour. J’apporte un soin
+                        particulier à chacune de mes créations: Des pièces
+                        uniques ou produites en petites séries. L’atelier
+                        est ouvert sur rendez-vous.
+                    </p>
+                </div>
+                <div class="Atelier__infos__formula__square">
+                    <h3 class="Atelier__infos__formula__square__title">
+                        Formule 2
+                    </h3>
+                    <h4 class="Atelier__infos__formula__square__price">
+                        Tarif : 60€
+                    </h4>
+                    <p class="Atelier__infos__formula__square__text">
+                        Mon atelier se situe en Dordogne. J’y élabore tableaux
+                        et sculptures mais également une ligne d’objets
+                        décoratifs pour l’habitat. Chaque pièce, est réalisée à
+                        la main ou tournée au tour. J’apporte un soin
+                        particulier à chacune de mes créations: Des pièces
+                        uniques ou produites en petites séries. L’atelier
+                        est ouvert sur rendez-vous.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="Atelier__horaires">
+            <div class="Atelier__infos__topic">
+                <h1 class="Atelier__infos__topic__title">Les horaires</h1>
+                <p class="Atelier__infos__topic__text">
+                    Mon atelier se situe en Dordogne. J’y élabore tableaux et
+                    sculptures mais également une ligne d’objets décoratifs pour
+                    l’habitat. Chaque pièce, est réalisée à la main ou tournée
+                    au tour. J’apporte un soin particulier à chacune de mes
+                    créations: Des pièces uniques ou produites en petites
+                    séries. L’atelier est ouvert sur rendez-vous.
+                </p>
+            </div>
+            <div style="flex: 3"></div>
+        </div>
+    </main>
+</Layout>
+
+<style lang="scss">
+    .Atelier {
+        padding: 2rem;
+        &__image {
+            width: 100%;
+            margin-bottom: 2rem;
+            height: 360px;
+            object-fit: cover;
+        }
+        &__infos {
+            &__topic {
+                margin-bottom: 2rem;
+                flex: 2;
+                &__title {
+                    font-size: 1.5rem;
+                }
+            }
+            &__formula {
+                display: flex;
+                flex-direction: column;
+                gap: 2rem;
+                margin-bottom: 2rem;
+                &__square {
+                    padding: 1rem;
+                    &:nth-child(1) {
+                        background-color: var(--text-color);
+                        color: var(--background-color);
+                    }
+                    &:nth-child(2) {
+                        background-color: var(--accent-color);
+                    }
+                    &__title {
+                        text-align: center;
+                        margin-bottom: 1rem;
+                    }
+                    &__price {
+                        margin-bottom: 1rem;
+                        font-size: 1rem;
+                    }
+                    &__text {
+                        font-weight: 300;
+                    }
+                }
+            }
+        }
+    }
+    @media screen and (min-width: 640px) {
+        .Atelier {
+            &__infos {
+                &__formula {
+                    flex-direction: row;
+                }
+            }
+        }
+    }
+
+    @media screen and (min-width: 992px) {
+        .Atelier {
+            max-width: 1280px;
+            margin: 0 auto;
+            &__image {
+                flex: 3;
+                height: 150%    ;
+            }
+            &__infos, &__cours{
+                display: flex;
+                gap: 4rem;
+
+            }
+            &__infos {
+                flex-direction: row-reverse;
+                &__formula {
+                    flex: 3;
+                }
+                &__aside {
+                    flex: 2;
+                }
+            }
+            &__horaires {
+                display: flex;
+
+            }
+        }
+        
+    }
+</style>
