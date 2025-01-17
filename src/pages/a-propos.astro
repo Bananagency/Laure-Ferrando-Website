@@ -84,7 +84,6 @@ import Layout from "../layouts/Layout.astro";
         padding: 2rem;
         &__paragraph {
             margin: 1rem 0;
-
         }
         &__expositions {
             &__list {
@@ -95,7 +94,6 @@ import Layout from "../layouts/Layout.astro";
         }
         &__image {
             padding: 0 2rem;
-            max-width: 480px;
             margin: 0 auto;
             img {
                 width: 100%;
@@ -105,15 +103,17 @@ import Layout from "../layouts/Layout.astro";
     @media screen and (min-width: 992px) {
         .divider {
             display: flex;
-            max-width: 880px;
+            max-width: 1280px;
             margin: 4rem auto;
-            gap: 2rem;
+            gap: 4rem;
             .About {
+                flex: 1;
                 padding: 0;
                 &__image {
-                    min-width: 400px;
+                    flex: 1;
                 }
             }
+
         }
     }
 </style>

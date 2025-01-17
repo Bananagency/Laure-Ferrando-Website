@@ -125,14 +125,17 @@ import Layout from "../layouts/Layout.astro";
         }
     }
 
-    @media screen and (min-width: 992px) {
+    @media screen and (min-width: 992px) {  
         .Contact {
             display: flex;
-            max-width: 880px;
+            max-width: 1280px;
             margin: 4rem auto;
-            gap: 2rem;
+            gap: 4rem;
+            &__infos {
+                flex: 1;
+            }
             &__form {
-                min-width: 420px;
+                flex: 1;
                 &__button {
                     width: max-content;
                 }
