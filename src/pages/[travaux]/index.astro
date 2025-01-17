@@ -1,0 +1,53 @@
+---
+import Layout from "../../layouts/Layout.astro"
+
+export async function getStaticPaths() {
+  return [
+    // { params: { /* required */ }, props: { /* optional */ } },
+    { params: { travaux: 'tableaux' } }, // [post] is the parameter
+    { params: { travaux: 'sculptures' } }, // must match the file name
+    { params: { travaux: 'vaisselles' } }, // must match the file name
+    // ...
+  ];
+}
+---
+
+<Layout>
+    <main class="Masonry">
+        <div class="Masonry__item">
+            <img src="l-atelier.jpg" alt="">
+        </div>
+        <div class="Masonry__item">
+            <img src="https://picsum.photos/200/300" alt="">
+        </div>
+        <div class="Masonry__item">
+            <img src="https://picsum.photos/300/200" alt="">
+        </div>
+        <div class="Masonry__item">
+            <img src="l-atelier.jpg" alt="">
+        </div>
+        <div class="Masonry__item">
+            <img src="https://picsum.photos/500" alt="">
+        </div>
+        <div class="Masonry__item">
+            <img src="https://picsum.photos/400/200" alt="">
+        </div>
+    </main>
+</Layout>
+
+<style lang="scss">
+    .Masonry {
+        column-count: 4;
+        column-gap: 1rem;
+        max-width: 1280px;
+        margin: 4rem auto;
+        &__item {
+            display: inline-block;
+            margin: 0 0 1rem;
+            width: 100%;
+            img {
+                width: 100%;
+            }
+        }
+    }
+</style>
