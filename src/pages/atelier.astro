@@ -2,7 +2,7 @@
 import Layout from "../layouts/Layout.astro";
 ---
 
-<Layout>
+<Layout title="Atelier">
     <main class="Atelier">
         <div class="Atelier__infos">
             <img class="Atelier__image" src="l-atelier.jpg" alt="">
@@ -29,6 +29,16 @@ import Layout from "../layouts/Layout.astro";
                                 class="Atelier__infos__topic__list__item__link"
                                 >22 rue du Temple, 24500 Eymet</a
                             >
+                        </li>
+                        <li class="Atelier__infos__topic__list__item">
+                            <iframe
+                            src="https://www.openstreetmap.org/export/embed.html?bbox=0.39475679397583013%2C44.665589274560986%2C0.4000139236450196%2C44.66784025254396&layer=mapnik"
+                            style="border: 1px solid black"></iframe><br /><small
+                            ><a
+                                href="https://www.openstreetmap.org/#map=19/44.666715/0.397385"
+                                >Afficher une carte plus grande</a
+                            ></small
+                        >
                         </li>
                     </ul>
                 </div>
@@ -113,6 +123,17 @@ import Layout from "../layouts/Layout.astro";
                 flex: 2;
                 &__title {
                     font-size: 1.5rem;
+                }
+                &__list {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 1rem;
+                    &__item {
+                        iframe {
+                            width: 100%;
+                            height: 296px;
+                        }
+                    }
                 }
             }
             &__formula {
