@@ -1,119 +1,198 @@
 ---
-import LogoMobile from '../assets/logo-mobile.svg'
-import BurgerButton from '../components/BurgerButton.astro'
+import LogoMobile from "../assets/logo-mobile.svg";
+import BurgerButton from "../components/BurgerButton.astro";
 ---
 
-
 <header class="Header">
-    <div class="Header__content">
-        <a href="/"><img class="Header__content__logo" src={LogoMobile.src} alt="Logo" /></a>
-        <div id="BurgerButton" class="Header__content__button"><BurgerButton /></div>
-        <nav id="Navigation" class="Header__content__navigation">
-            <ul class="Header__content__navigation__list">
-                <li class="Header__content__navigation__list__item"><a href="/tableaux">Travaux</a></li>
-                <li class="Header__content__navigation__list__item"><a href="/a-propos">À propos</a></li>
-                <li class="Header__content__navigation__list__item"><a href="/contact">Contact</a></li>
-                <li class="Header__content__navigation__list__item"><a href="/atelier">L'Atelier</a></li>
-            </ul>
-        </nav>
+  <div class="Header__content">
+    <a href="/"
+      ><img class="Header__content__logo" src={LogoMobile.src} alt="Logo" /></a
+    >
+    <div id="BurgerButton" class="Header__content__button">
+      <BurgerButton />
     </div>
+    <nav id="Navigation" class="Header__content__navigation">
+      <ul class="Header__content__navigation__list">
+        <li
+          class="Header__content__navigation__list__item"
+          id="dropdown-button"
+        >
+          <span>Travaux</span>
+          <ul class="Header__content__navigation__list__item__dropdown">
+            <li class="Header__content__navigation__list__item__dropdown__item">
+              <a href="/tableaux">Tableaux</a>
+            </li>
+            <li class="Header__content__navigation__list__item__dropdown__item">
+              <a href="/sculptures">Sculptures</a>
+            </li>
+            <li class="Header__content__navigation__list__item__dropdown__item">
+              <a href="/vaisselles">Vaisselles</a>
+            </li>
+          </ul>
+        </li>
+        <li class="Header__content__navigation__list__item">
+          <a href="/a-propos">À propos</a>
+        </li>
+        <li class="Header__content__navigation__list__item">
+          <a href="/contact">Contact</a>
+        </li>
+        <li class="Header__content__navigation__list__item">
+          <a href="/atelier">L'Atelier</a>
+        </li>
+      </ul>
+    </nav>
+  </div>
 </header>
 
-
 <style lang="scss">
-    .Header {
-      padding: 0 2rem;
-        &__content {
-            display: flex;
-            padding-top: 1rem;
-            justify-content: space-between;
-            align-items: center;
-          &__logo, &__button {
-            z-index: 101;
-          }
-          &__navigation {
-            position: absolute;
-            height: 100%;
-            width: 100%;
-            top: 0;
-            left: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: var(--background-color);
-            z-index: 100;
-            transform: translateY(-100%);
-            transition: transform 0.3s, opacity 0.5s;
+  .Header {
+    padding: 0 2rem;
+    &__content {
+      display: flex;
+      padding-top: 1rem;
+      justify-content: space-between;
+      align-items: center;
+      &__logo,
+      &__button {
+        z-index: 101;
+      }
+      &__navigation {
+        position: absolute;
+        height: 100%;
+        width: 100%;
+        top: 0;
+        left: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: var(--background-color);
+        z-index: 100;
+        transform: translateY(-100%);
+        transition:
+          transform 0.3s,
+          opacity 0.5s;
+        opacity: 0;
+        &__list {
+          &__item {
+            font-size: 1.2rem;
+            margin: 2rem 0;
+            transition:
+              transform 0.3s ease,
+              opacity 0.5s ease;
             opacity: 0;
-            &__list {
+            transform: translateX(100%);
+            transition-delay: 0.3s;
+            z-index: 100;
+            &:nth-child(1) {
+              position: relative;
+              cursor: pointer;
+              border-bottom: #342d1f solid 1px;
+            }
+            &:nth-child(2) {
+              transition-delay: 0.4s;
+            }
+            &:nth-child(3) {
+              transition-delay: 0.5s;
+            }
+            &:nth-child(4) {
+              transition-delay: 0.6s;
+            }
+            &__dropdown {
+              display: flex;
+              flex-direction: column;
+              gap: 1rem;
+              margin: 1rem 0;
               &__item {
-                font-size: 1.2rem;
-                margin: 2rem 0;
-                transition: transform .3s ease, opacity .5s ease;
-                opacity: 0;
-                transform: translateX(100%);
-                transition-delay: .3s;
-                &:nth-child(2) {
-                  transition-delay: .4s;
-                }
-                &:nth-child(3) {
-                  transition-delay: .5s;
-                }
-                &:nth-child(4) {
-                  transition-delay: .6s;
-                }
-              }
-            }
-          }
-        }
-    }
-
-    .is-active {
-      transform: translateX(0);
-      opacity: 1;
-    }
-
-
-
-      @media screen and (min-width: 992px) {
-        .Header {
-          &__content {
-            &__button {
-              display: none;
-            }
-            &__navigation {
-              position: initial;
-              height: initial;
-              transform: translateX(0);
-              opacity: 1;
-              width: 100%;
-              justify-content: flex-end;
-              &__list {
-                display: flex;
-                &__item {
-                  opacity: 1;
-                  width: max-content;
-                  transform: translateX(0);
-                  &:not(:first-child) {
-                    padding-left: 3rem;
-                  }
-                }
+                color: #b39966;
               }
             }
           }
         }
       }
+    }
+  }
 
+  .is-active {
+    transform: translate(0)!important;
+    opacity: 1;
+  }
+
+  @media screen and (min-width: 992px) {
+    .Header {
+      &__content {
+        &__button {
+          display: none;
+        }
+        &__navigation {
+          position: initial;
+          height: initial;
+          transform: translateX(0);
+          opacity: 1;
+          width: 100%;
+          justify-content: flex-end;
+          &__list {
+            display: flex;
+            &__item {
+              opacity: 1;
+              width: max-content;
+              transform: translateX(0);
+              &:not(:first-child) {
+                padding-left: 3rem;
+              }
+              &:nth-child(1) {
+                border: none!important;
+                span {
+                  display: inline-block;
+                  position: relative;
+
+                  &::after {
+                    content: url("/src/assets/down-arrow.svg");
+                    position: absolute;
+                    top: 50%;
+                    transform: translateY(-60%);
+                    right: -1rem;
+                  }
+                }
+              }
+              &__dropdown {
+                position: absolute;
+                left: -1rem;
+                border-top: 1px solid #342d1f;
+                padding: 1rem;
+                margin-top: 1rem;
+                transform: translateY(-100vh);
+                background-color: #f3f1ed;
+                display: flex;
+                flex-direction: column;
+                gap: 1rem;
+                z-index: -10;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
 </style>
 
 <script>
-    const burgerButton = document.querySelector('#BurgerButton');
-    const navigation = document.querySelector('#Navigation');
-    const navItems = navigation.querySelectorAll('.Header__content__navigation__list__item');
-    burgerButton.addEventListener('click', () => {
-        navigation.classList.toggle('is-active');
-        navItems.forEach(item => {
-            item.classList.toggle('is-active');
-        })
-    })
+  const burgerButton = document.querySelector("#BurgerButton");
+  const navigation = document.querySelector("#Navigation");
+  const navItems = navigation?.querySelectorAll(
+    ".Header__content__navigation__list__item",
+  );
+  burgerButton?.addEventListener("click", () => {
+    navigation?.classList.toggle("is-active");
+    navItems?.forEach((item) => {
+      item.classList.toggle("is-active");
+    });
+  });
+
+  const dropdownButton = document.querySelector("#dropdown-button");
+  const dropdownMenu = document.querySelector(
+    ".Header__content__navigation__list__item__dropdown",
+  );
+  dropdownButton?.addEventListener("click", () => {
+    dropdownMenu?.classList.toggle("is-active");
+  });
 </script>
