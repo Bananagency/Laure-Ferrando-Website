@@ -1,7 +1,4 @@
 ---
-import "../styles/_main.css";
-import Header from "../components/Header.astro";
-
 import '@fontsource/lato/100.css';
 import '@fontsource/lato/300.css';
 import '@fontsource/lato/400.css';
@@ -13,6 +10,9 @@ import '@fontsource/libre-baskerville/700.css';
 
 import '../styles/_main.css'
 import Footer from "../components/Footer.astro";
+import Header from "../components/Header.astro";
+
+const { title } = Astro.props;
 ---
 <!doctype html>
 <html lang="fr">
@@ -20,7 +20,7 @@ import Footer from "../components/Footer.astro";
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="generator" content={Astro.generator} />
-        <title>Laure Ferrando</title>
+        <title>Laure Ferrando - { title }</title>
     </head>
     <body>
     <Header/>
