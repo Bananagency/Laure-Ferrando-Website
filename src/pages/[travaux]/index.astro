@@ -1,5 +1,6 @@
 ---
 import Layout from "../../layouts/Layout.astro";
+import { Image } from "astro:assets";
 
 export async function getStaticPaths() {
     return [
@@ -23,7 +24,14 @@ const title = pageTitles[travaux] || "Mon travail";
 <Layout title={title}>
     <main class="Masonry">
         <div class="Masonry__item">
-            <img src="https://picsum.photos/300/200" alt="" />
+            <Image
+                loading="eager"
+                decoding="async"
+                width="300"
+                height="200"
+                src="https://picsum.photos/300/200"
+                alt="Exemple de paysage"
+            />
         </div>
         <div class="Masonry__item">
             <img src="https://picsum.photos/200/300" alt="" />
@@ -49,7 +57,7 @@ const title = pageTitles[travaux] || "Mon travail";
         column-gap: 0.5rem;
         max-width: 1280px;
         padding: 0 2rem;
-        margin: 4rem auto; 
+        margin: 4rem auto;
         &__item {
             display: inline-block;
             margin: 0 0 0.5rem 0;

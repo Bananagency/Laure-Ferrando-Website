@@ -5,22 +5,52 @@
 <footer class="Footer">
     <nav class="Footer__navigation">
         <ul class="Footer__navigation__list">
-            <li class="Footer__navigation__list__item"><a href="/">Accueil</a></li>
-            <li class="Footer__navigation__list__item"><a>Travaux</a></li>
-            <li class="Footer__navigation__list__item"><a href="/a-propos">À propos</a></li>
-            <li class="Footer__navigation__list__item"><a href="/contact">Contact</a></li>
-            <li class="Footer__navigation__list__item"><a href="/atelier">Atelier</a></li>
+            <li class="Footer__navigation__list__item">
+                <a href="/">Accueil</a>
+            </li>
+            <li class="Footer__navigation__list__item">
+                <a href="/tableaux">Tableaux</a>
+            </li>
+            <li class="Footer__navigation__list__item">
+                <a href="/sculptures">Sculptures</a>
+            </li>
+            <li class="Footer__navigation__list__item">
+                <a href="/vaisselles">Vaisselles</a>
+            </li>
+            <li class="Footer__navigation__list__item">
+                <a href="/a-propos">À propos</a>
+            </li>
+            <li class="Footer__navigation__list__item">
+                <a href="/contact">Contact</a>
+            </li>
+            <li class="Footer__navigation__list__item">
+                <a href="/atelier">Atelier</a>
+            </li>
         </ul>
         <ul class="Footer__social__list">
-            <li class="Footer__social__list__item"><a>Facebook</a></li>
-            <li class="Footer__social__list__item"><a>Instagram</a></li>
-            <li class="Footer__social__list__item"><a>Pinterest</a></li>
+            <li class="Footer__social__list__item">
+                <a href="https://www.facebook.com/laureferrandoartiste/"
+                    >Facebook</a
+                >
+            </li>
+            <li class="Footer__social__list__item">
+                <a href="https://www.instagram.com/ferrandolaure/">Instagram</a>
+            </li>
+            <li class="Footer__social__list__item">
+                <a href="https://fr.pinterest.com/ferrandolaure0211/"
+                    >Pinterest</a
+                >
+            </li>
         </ul>
     </nav>
     <div class="Footer__legals">
         <ul class="Footer__legals__list">
-            <li class="Footer__legals__list__item"><a href="/conditions-generales-de-vente">CGV</a></li>
-            <li class="Footer__legals__list__item"><a href="/mentions-legales">Mentions légales</a></li>
+            <li class="Footer__legals__list__item">
+                <a href="/conditions-generales-de-vente">CGV</a>
+            </li>
+            <li class="Footer__legals__list__item">
+                <a href="/mentions-legales">Mentions légales</a>
+            </li>
         </ul>
     </div>
     <div class="Footer__copyright">© 2025 Laure Ferrando</div>
@@ -28,33 +58,34 @@
 
 <style lang="scss">
     .Footer {
-      border-top: 1px solid var(--text-color);
-      margin: 1rem 0;
-      padding: 1rem 2rem;
-      &__social, &__legals {
-        &__list {
-          &__item {
-            font-weight: 300;
-            margin: 1rem 0;
-          }
+        border-top: 1px solid var(--text-color);
+        margin: 1rem 0;
+        padding: 1rem 2rem;
+        &__social,
+        &__legals {
+            &__list {
+                &__item {
+                    font-weight: 300;
+                    margin: 1rem 0;
+                }
+            }
         }
-      }
-      &__social__list__item {
-        text-align: right;
-      }
-      &__navigation {
-        display: flex;
-        justify-content: space-between;
-        &__list {
-          &__item {
-            margin: 1rem 0;
-          }
+        &__social__list__item {
+            text-align: right;
         }
-      }
-      &__copyright {
-        margin-top: 6rem;
-        text-align: center;
-        width: 100%;
-      }
+        &__navigation {
+            display: flex;
+            justify-content: space-between;
+            &__list {
+                &__item {
+                    margin: 1rem 0;
+                }
+            }
+        }
+        &__copyright {
+            margin-top: 6rem;
+            text-align: center;
+            width: 100%;
+        }
     }
 </style>
