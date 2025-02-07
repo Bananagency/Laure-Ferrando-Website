@@ -1,1 +1,62 @@
-------<div class="burger">    <div class="burger__bar"></div>    <div class="burger__bar"></div>    <div class="burger__bar"></div></div><style lang="scss">    .burger {      position: relative;      width: 2rem;      height: 1.5rem;      &__bar {        height: 4px;        background: var(--accent-color);        border-radius: 4px;        transition: all .3s ease;        position: absolute;        &:nth-child(1) {          width: 100%;          top: 0;          left: 0;        }        &:nth-child(2) {          width: 100%;          top: 50%;          transform: translateY(-50%);          left: 0;        }        &:nth-child(3) {          width: 50%;          bottom: 0;          right: 0;        }      }    }    .active {      .burger__bar {        &:nth-child(1) {          transform: rotateZ(45deg);        }        &:nth-child(2) {          transform: rotateZ(-45deg);          top: 0;        }        &:nth-child(3) {          transform: rotateX(90deg);        }      }    }</style><script>    const burger = document.querySelector(".burger");    burger.addEventListener("click", () => {        burger.classList.toggle("active");    })</script>
+---
+
+---
+
+<div class="burger">
+    <div class="burger__bar"></div>
+    <div class="burger__bar"></div>
+    <div class="burger__bar"></div>
+</div>
+
+<style lang="scss">
+    .burger {
+        position: relative;
+        width: 2rem;
+        height: 1.5rem;
+        &__bar {
+            height: 4px;
+            background: var(--accent-color);
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            position: absolute;
+            &:nth-child(1) {
+                width: 100%;
+                top: 0;
+                left: 0;
+            }
+            &:nth-child(2) {
+                width: 100%;
+                top: 50%;
+                transform: translateY(-50%);
+                left: 0;
+            }
+            &:nth-child(3) {
+                width: 50%;
+                bottom: 0;
+                right: 0;
+            }
+        }
+    }
+
+    .active {
+        .burger__bar {
+            &:nth-child(1) {
+                transform: rotateZ(45deg);
+            }
+            &:nth-child(2) {
+                transform: rotateZ(-45deg);
+                top: 0;
+            }
+            &:nth-child(3) {
+                transform: rotateX(90deg);
+            }
+        }
+    }
+</style>
+<script>
+    const burger = document.querySelector(".burger");
+
+    burger?.addEventListener("click", () => {
+        burger.classList.toggle("active");
+    });
+</script>
