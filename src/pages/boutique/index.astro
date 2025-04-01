@@ -1,22 +1,10 @@
 ---
 import Layout from "../../layouts/Layout.astro";
+import { Fetcher } from "../../utils/fetchUtils.js";
 
-let username = "ck_161f50a99e27952f050ecad5caacbd5537c6c461";
-let password = "cs_2e904a2e78cd073eeedb9b0f6c9dcf76eb96779d";
+const fetchComponent = new Fetcher();
 
-let headers = new Headers();
-
-headers.set("Authorization", "Basic " + btoa(username + ":" + password));
-
-const response = await fetch(
-    "https://admin.laure-ferrando.com/wp-json/wc/v3/products",
-    {
-        method: "GET",
-        headers: headers,
-    },
-);
-
-const products = await response.json();
+const products = await fetchComponent.fetchData("wp-json/wc/v3/products");
 ---
 
 <Layout title="Boutique">
