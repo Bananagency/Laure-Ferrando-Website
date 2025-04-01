@@ -12,7 +12,10 @@ const products = await fetchComponent.fetchData("wp-json/wc/v3/products");
         <div class="Boutique__products">
             {
                 products.map((product: any) => (
-                    <div class="Boutique__products__product">
+                    <a
+                        href={"/boutique/" + product.slug}
+                        class="Boutique__products__product"
+                    >
                         <img
                             class="Boutique__products__product__image"
                             src={product.images[0] ? product.images[0].src : ""}
@@ -24,7 +27,7 @@ const products = await fetchComponent.fetchData("wp-json/wc/v3/products");
                         <p class="Boutique__products__product__price">
                             {product.price} €
                         </p>
-                    </div>
+                    </a>
                 ))
             }
         </div>

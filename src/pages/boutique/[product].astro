@@ -1,0 +1,27 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { Fetcher } from "../../utils/fetchUtils.js";
+
+const { product } = Astro.params;
+
+const fetchComponent = new Fetcher();
+
+const data = await fetchComponent.fetchData(
+    "wp-json/wc/v3/products?slug=" + product,
+);
+---
+
+<Layout>
+    <div class="Product">
+        <h1>{data[0].name}</h1>
+        {data[0].price} €
+        <p set:html={data[0].description} />
+        {data[0].images.map((image) => <img src={image.src} alt={image.alt} />)}
+    </div>
+</Layout>
+
+<style lang="scss">
+    img {
+        width: 300px;
+    }
+</style>
