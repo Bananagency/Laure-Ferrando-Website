@@ -1,0 +1,10 @@
+services:
+  site-upr:
+    image: laure-ferrando-website
+    container_name: app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "4321:4321"
+    restart: unless-stopped
