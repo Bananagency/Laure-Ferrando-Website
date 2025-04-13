@@ -16,7 +16,11 @@ const data = await fetchComponent.fetchData(
         <h1>{data[0].name}</h1>
         {data[0].price} €
         <p set:html={data[0].description} />
-        {data[0].images.map((image) => <img src={image.src} alt={image.alt} />)}
+        {
+            data[0].images.map((image: any) => (
+                <img src={image.src} alt={image.alt} />
+            ))
+        }
     </div>
 </Layout>
 
