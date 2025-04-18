@@ -127,5 +127,22 @@ onMounted(() => {
             }
         }
     }
+    @media screen and (max-width: 992px) {
+        padding: 0 1rem;
+        &__main {
+            width: 100%;
+            height: 348px;
+        }
+    }
+    @media (pointer: coarse) {
+        &__main {
+            &__image {
+                opacity: 1 !important;
+            }
+            &__zoom {
+                display: none !important;
+            }
+        }
+    }
 }
 </style>
