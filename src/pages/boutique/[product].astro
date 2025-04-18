@@ -1,4 +1,5 @@
 ---
+import ProductCarrousel from "../../components/reactive/ProductCarrousel.vue";
 import Layout from "../../layouts/Layout.astro";
 import { Fetcher } from "../../utils/fetchUtils.js";
 
@@ -29,15 +30,7 @@ const item = data[0];
             <div class="Product__container__desc" set:html={item.description} />
         </div>
         <div class="Product__carrousel">
-            {
-                item.images !== null && item.images.length > 0 ? (
-                    <img
-                        class="Product__carrousel__main"
-                        src={item.images[0].src}
-                        alt={item.images[0].alt}
-                    />
-                ) : null
-            }
+            <ProductCarrousel images={item.images} client:idle />
         </div>
     </div>
 </Layout>
@@ -94,7 +87,7 @@ const item = data[0];
             &__main {
                 width: 548px;
                 height: 496px;
-                object-fit: cover;
+                object-fit: contain;
             }
         }
     }
