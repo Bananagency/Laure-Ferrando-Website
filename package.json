@@ -14,7 +14,9 @@
     "@astrojs/vue": "5.0.10",
     "@fontsource/lato": "^5.1.1",
     "@fontsource/libre-baskerville": "^5.1.1",
+    "@nanostores/vue": "^0.11.0",
     "astro": "5.7.2",
+    "nanostores": "^1.0.1",
     "sass": "^1.83.1",
     "swiper": "^11.2.1",
     "vue": "^3.5.13"

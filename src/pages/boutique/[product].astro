@@ -1,4 +1,5 @@
 ---
+import AddToCartButton from "../../components/reactive/AddToCartButton.vue";
 import ProductCarrousel from "../../components/reactive/ProductCarrousel.vue";
 import Layout from "../../layouts/Layout.astro";
 import { Fetcher } from "../../utils/fetchUtils.js";
@@ -14,15 +15,23 @@ const data = await fetchComponent.fetchData(
 const item = data[0];
 ---
 
+<script>
+    const buttonAddToCart = document?.querySelector("#addToCart");
+    const addToCart = () => {
+        const itemId = buttonAddToCart?.getAttribute("data-item-id") ?? "";
+        sessionStorage.setItem("cart", `[${itemId}]`);
+    };
+
+    buttonAddToCart?.addEventListener("click", () => addToCart());
+</script>
+
 <Layout>
     <div class="Product">
         <div class="Product__container">
             <h1 class="Product__container__title">{item.name}</h1>
             <p class="Product__container__price">{item.price} €</p>
             <div class="Product__container__boutons">
-                <button class="Product__container__boutons__bouton"
-                    >Ajouter au panier</button
-                >
+                <AddToCartButton itemId={item.id} client:idle />
                 <button class="Product__container__boutons__bouton"
                     >Acheter maintenant</button
                 >

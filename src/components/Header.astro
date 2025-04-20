@@ -3,6 +3,7 @@ import LogoMobile from "../assets/logo-mobile.svg";
 import LogoDesktop from "../assets/logo-desktop.svg";
 import BurgerButton from "../components/BurgerButton.astro";
 import { Image } from "astro:assets";
+import CartButton from "./reactive/CartButton.vue";
 ---
 
 <header class="Header">
@@ -68,6 +69,9 @@ import { Image } from "astro:assets";
                 </li>
                 <li class="Header__content__navigation__list__item">
                     <a href="/boutique">Boutique</a>
+                </li>
+                <li class="Header__content__navigation__list__item">
+                    <CartButton client:idle />
                 </li>
             </ul>
         </nav>
