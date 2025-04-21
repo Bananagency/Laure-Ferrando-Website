@@ -2,7 +2,10 @@
 import { ref, onMounted } from "vue";
 
 const props = defineProps({
-    images: Array,
+    images: {
+        type: Array,
+        default: null,
+    },
 });
 
 let current = ref(0);
@@ -11,35 +14,41 @@ const imageContainer = ref(null);
 const zoomContainer = ref(null);
 
 onMounted(() => {
-    const container = imageContainer.value;
-    const zoomCont = zoomContainer.value;
-    const originalImage = container.querySelector(".Carrousel__main__image");
-    const zoomedImage = zoomCont.querySelector(".Carrousel__main__zoom__image");
+    if (props.images !== null) {
+        const container = imageContainer.value;
+        const zoomCont = zoomContainer.value;
+        const originalImage = container.querySelector(
+            ".Carrousel__main__image",
+        );
+        const zoomedImage = zoomCont.querySelector(
+            ".Carrousel__main__zoom__image",
+        );
 
-    container.addEventListener("mouseenter", () => {
-        zoomCont.style.display = "block";
-    });
+        container.addEventListener("mouseenter", () => {
+            zoomCont.style.display = "block";
+        });
 
-    container.addEventListener("mousemove", (e) => {
-        const rect = container.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
+        container.addEventListener("mousemove", (e) => {
+            const rect = container.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
 
-        // Calculer la position de l'image zoomée
-        const offsetX = (x / originalImage.offsetWidth) * 100;
-        const offsetY = (y / originalImage.offsetHeight) * 100;
+            // Calculer la position de l'image zoomée
+            const offsetX = (x / originalImage.offsetWidth) * 100;
+            const offsetY = (y / originalImage.offsetHeight) * 100;
 
-        zoomedImage.style.transform = `translate(-${offsetX}%, -${offsetY}%)`;
-    });
+            zoomedImage.style.transform = `translate(-${offsetX}%, -${offsetY}%)`;
+        });
 
-    container.addEventListener("mouseleave", () => {
-        zoomCont.style.display = "none";
-    });
+        container.addEventListener("mouseleave", () => {
+            zoomCont.style.display = "none";
+        });
+    }
 });
 </script>
 
 <template>
-    <div class="Carrousel">
+    <div v-if="images && images.lenght > 0" class="Carrousel">
         <div class="Carrousel__main" ref="imageContainer">
             <img
                 class="Carrousel__main__image"
@@ -66,11 +75,30 @@ onMounted(() => {
             </li>
         </ul>
     </div>
+    <div v-else class="Carrousel">
+        <div class="Carrousel__sample">
+            <img
+                class="Carrousel__sample__image"
+                src="/image-sample.webp"
+                alt=""
+            />
+        </div>
+    </div>
 </template>
 
 <style lang="scss" scoped>
 .Carrousel {
     width: 100%;
+    &__sample {
+        width: 548px;
+        height: 496px;
+        object-fit: contain;
+        &__image {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+    }
     &__main {
         width: 548px;
         height: 496px;

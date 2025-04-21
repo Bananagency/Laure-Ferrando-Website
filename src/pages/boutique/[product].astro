@@ -39,7 +39,11 @@ const item = data[0];
             <div class="Product__container__desc" set:html={item.description} />
         </div>
         <div class="Product__carrousel">
-            <ProductCarrousel images={item.images} client:idle />
+            {
+                item.images ? (
+                    <ProductCarrousel images={item.images} client:idle />
+                ) : null
+            }
         </div>
     </div>
 </Layout>
