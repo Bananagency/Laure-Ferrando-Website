@@ -13,7 +13,7 @@ export class Fetcher {
       headers: headers,
     };
 
-    const response = await fetch(import.meta.env.API_URL + endpoint, {
+    const response = await fetch(import.meta.env.PUBLIC_API_URL + endpoint, {
       ...defaultOptions,
       ...options,
     });

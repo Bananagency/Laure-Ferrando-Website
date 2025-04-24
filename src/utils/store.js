@@ -1,16 +1,23 @@
 import { atom, map } from "nanostores";
-export const cart = map({});
+export const cart = atom([]);
 export const total = atom(0);
 
 export function addCartItem(id) {
-  const existingEntry = cart.get()[id];
-  if (!existingEntry) {
-    cart.setKey(id, { quantity: 1 }); // Ajoute l'élément avec une quantité de 1
+  const cartState = cart.get(); // Récupère l'état actuel du panier
+  const existingEntryIndex = cartState.findIndex((item) => item.id === id); // Trouve l'élément dans le tableau
+
+  if (existingEntryIndex === -1) {
+    // Si l'élément n'existe pas, ajoute un nouvel objet avec une quantité de 1
+    cart.set([...cartState, { id: id, quantity: 1 }]);
   } else {
-    cart.setKey(id, { quantity: existingEntry.quantity + 1 }); // Incrémente la quantité si l'élément existe déjà
+    // Si l'élément existe, incrémente sa quantité
+    const updatedCart = [...cartState];
+    updatedCart[existingEntryIndex].quantity += 1;
+    cart.set(updatedCart);
   }
-  updateTotal();
-  storeLocaLsession();
+
+  updateTotal(); // Met à jour le total
+  storeLocaLsession(); // Sauvegarde dans la sessionStorage
   console.log("Cart state:", cart.get());
 }
 

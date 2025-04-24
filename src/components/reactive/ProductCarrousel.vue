@@ -48,7 +48,7 @@ onMounted(() => {
 </script>
 
 <template>
-    <div v-if="images && images.lenght > 0" class="Carrousel">
+    <div v-if="images && images.length > 0" class="Carrousel">
         <div class="Carrousel__main" ref="imageContainer">
             <img
                 class="Carrousel__main__image"
