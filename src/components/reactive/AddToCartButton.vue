@@ -2,22 +2,28 @@
 import { addCartItem, cart } from "../../utils/store";
 
 const props = defineProps({
-    itemId: Number,
+    id: Number,
+    name: String,
+    image: String,
+    price: Number,
 });
 
 const addToCart = () => {
-    addCartItem(Number(props.itemId));
+    addCartItem(
+        Number(props.id),
+        String(props.name),
+        String(props.image),
+        Number(props.price),
+    );
 };
 </script>
 
 <template>
-    <button class="Product__container__boutons__bouton" @click="addToCart()">
-        Ajouter au panier
-    </button>
+    <button class="Bouton" @click="addToCart()">Ajouter au panier</button>
 </template>
 
 <style lang="scss" scoped>
-button {
+.Bouton {
     padding: 1rem 0;
     cursor: pointer;
     border: none;

@@ -19,7 +19,7 @@ const item = data[0];
     const buttonAddToCart = document?.querySelector("#addToCart");
     const addToCart = () => {
         const itemId = buttonAddToCart?.getAttribute("data-item-id") ?? "";
-        sessionStorage.setItem("cart", `[${itemId}]`);
+        localStorage.setItem("cart", `[${itemId}]`);
     };
 
     buttonAddToCart?.addEventListener("click", () => addToCart());
@@ -31,10 +31,13 @@ const item = data[0];
             <h1 class="Product__container__title">{item.name}</h1>
             <p class="Product__container__price">{item.price} €</p>
             <div class="Product__container__boutons">
-                <AddToCartButton itemId={item.id} client:idle />
-                <button class="Product__container__boutons__bouton"
-                    >Acheter maintenant</button
-                >
+                <AddToCartButton
+                    id={item.id}
+                    name={item.name}
+                    image={item.images[0].src}
+                    price={item.price}
+                    client:idle
+                />
             </div>
             <div class="Product__container__desc" set:html={item.description} />
         </div>

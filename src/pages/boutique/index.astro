@@ -1,11 +1,11 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import { Fetcher } from "../../utils/fetchUtils.js";
-import ImageSample from "image-sample.webp";
-
 const fetchComponent = new Fetcher();
 
-const products = await fetchComponent.fetchData("wp-json/wc/v3/products");
+const products = await fetchComponent.fetchData(
+    "wp-json/wc/v3/products?per_page=100",
+);
 ---
 
 <Layout title="Boutique">
@@ -41,6 +41,8 @@ const products = await fetchComponent.fetchData("wp-json/wc/v3/products");
 
 <style lang="scss">
     .Boutique {
+        max-width: 1280px;
+        margin: 0 auto;
         &__products {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));

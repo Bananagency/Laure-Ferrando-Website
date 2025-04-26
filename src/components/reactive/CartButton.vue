@@ -7,11 +7,8 @@ import cartImage from "../../assets/cart.svg";
 const $total = useStore(total);
 
 onMounted(() => {
-    if (
-        typeof sessionStorage !== "undefined" &&
-        sessionStorage.getItem("cart")
-    ) {
-        const cartState = JSON.parse(sessionStorage.getItem("cart"));
+    if (typeof localStorage !== "undefined" && localStorage.getItem("cart")) {
+        const cartState = JSON.parse(localStorage.getItem("cart"));
         cart.set(cartState);
     }
     updateTotal();
