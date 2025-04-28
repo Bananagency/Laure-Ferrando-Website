@@ -45,7 +45,6 @@ onMounted(() => {
         isLoading.value = false;
     }
 });
-
 </script>
 
 <template>
@@ -107,7 +106,7 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .Cart {
-    margin-top: 3rem;
+    margin-top: 4rem;
     &__container {
         display: grid;
         grid-template-columns: repeat(10, 1fr);
