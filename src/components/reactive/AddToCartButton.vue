@@ -6,6 +6,10 @@ const props = defineProps({
     name: String,
     image: String,
     price: Number,
+    weight: {
+        type: [Number, String],
+        required: true
+    }
 });
 
 const addToCart = () => {
@@ -14,6 +18,7 @@ const addToCart = () => {
         String(props.name),
         String(props.image),
         Number(props.price),
+        parseFloat(props.weight)
     );
 };
 </script>

@@ -2,6 +2,7 @@
 import AddToCartButton from "../../components/reactive/AddToCartButton.vue";
 import ProductCarrousel from "../../components/reactive/ProductCarrousel.vue";
 import Layout from "../../layouts/Layout.astro";
+import Sample from "../../assets/image-sample.webp";
 import { Fetcher } from "../../utils/fetchUtils.js";
 
 const { product } = Astro.params;
@@ -13,6 +14,21 @@ const data = await fetchComponent.fetchData(
 );
 
 const item = data[0];
+
+// Log détaillé des données du produit
+console.log('📦 Données du produit:', {
+    id: item.id,
+    nom: item.name,
+    poids: item.weight,
+    type: typeof item.weight,
+    prix: item.price
+});
+
+// Vérification du poids
+if (!item.weight || item.weight === null) {
+    console.warn(`⚠️ Le produit "${item.name}" n'a pas de poids défini`);
+    item.weight = 0; // Valeur par défaut
+}
 ---
 
 <script>
@@ -30,12 +46,14 @@ const item = data[0];
         <div class="Product__container">
             <h1 class="Product__container__title">{item.name}</h1>
             <p class="Product__container__price">{item.price} €</p>
+            { item.weight ? <p class="Product__container__weight">{item.weight} kg</p> : null}
             <div class="Product__container__boutons">
                 <AddToCartButton
                     id={item.id}
                     name={item.name}
-                    image={item.images[0].src}
+                    image={item.images[0] ? item.images[0].src : Sample.src}
                     price={item.price}
+                    weight={item.weight}
                     client:idle
                 />
             </div>
