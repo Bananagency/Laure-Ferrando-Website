@@ -6,7 +6,9 @@ import { computed, onMounted, ref, watch } from "vue";
 
 const subTotal = ref(0);
 const shipping = ref(0);
+const totalWeight = ref(0);
 const total = computed(() => subTotal.value + shipping.value);
+const showShippingInfo = ref(false);
 
 const isLoading = ref(true);
 
@@ -23,13 +25,27 @@ const handleQuantityUpdate = async (articleId, newQuantity) => {
     }
 };
 
+const calculateShipping = (weight) => {
+    if (weight < 1) {
+        return 5;
+    } else if (weight >= 1 && weight <= 5) {
+        return 10;
+    } else {
+        return 15;
+    }
+};
+
 const cost = () => {
     if ($cart.value.length > 0) {
         let e = 0;
+        let totalW = 0;
         $cart.value.forEach((item) => {
             e += item.quantity * item.price;
+            totalW += item.quantity * (item.weight || 0);
         });
         subTotal.value = e;
+        totalWeight.value = parseFloat(totalW.toFixed(2));
+        shipping.value = calculateShipping(totalWeight.value);
     }
 };
 
@@ -95,7 +111,34 @@ onMounted(() => {
                                     <td>{{ subTotal }} €</td>
                                 </tr>
                                 <tr>
-                                    <td>Livraison</td>
+                                    <td>Poids total</td>
+                                    <td>{{ totalWeight }} kg</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Livraison
+                                        <button 
+                                            class="cart__summary__info-button"
+                                            @click="showShippingInfo = true"
+                                            aria-label="Informations sur les frais de port"
+                                        >
+                                            <svg 
+                                                xmlns="http://www.w3.org/2000/svg" 
+                                                width="16" 
+                                                height="16" 
+                                                viewBox="0 0 24 24" 
+                                                fill="none" 
+                                                stroke="currentColor" 
+                                                stroke-width="2" 
+                                                stroke-linecap="round" 
+                                                stroke-linejoin="round"
+                                            >
+                                                <circle cx="12" cy="12" r="10"></circle>
+                                                <line x1="12" y1="16" x2="12" y2="12"></line>
+                                                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                                            </svg>
+                                        </button>
+                                    </td>
                                     <td>{{ shipping }} €</td>
                                 </tr>
                                 <tr class="total">
@@ -113,6 +156,41 @@ onMounted(() => {
                 <a href="/boutique">
                     <button>Continuer mes achats</button>
                 </a>
+            </div>
+        </div>
+
+        <!-- Modal des frais de port -->
+        <div v-if="showShippingInfo" class="cart__modal">
+            <div class="cart__modal__overlay" @click="showShippingInfo = false"></div>
+            <div class="cart__modal__content">
+                <button 
+                    class="cart__modal__close"
+                    @click="showShippingInfo = false"
+                    aria-label="Fermer"
+                >
+                    ×
+                </button>
+                <h2>Calcul des frais de port</h2>
+                <div class="cart__modal__shipping-info">
+                    <p>Les frais de port sont calculés en fonction du poids total de votre commande :</p>
+                    <ul>
+                        <li>
+                            <span class="cart__modal__shipping-info__weight">Moins de 1 kg</span>
+                            <span class="cart__modal__shipping-info__price">5 €</span>
+                        </li>
+                        <li>
+                            <span class="cart__modal__shipping-info__weight">De 1 à 5 kg</span>
+                            <span class="cart__modal__shipping-info__price">10 €</span>
+                        </li>
+                        <li>
+                            <span class="cart__modal__shipping-info__weight">Plus de 5 kg</span>
+                            <span class="cart__modal__shipping-info__price">15 €</span>
+                        </li>
+                    </ul>
+                    <p class="cart__modal__shipping-info__current">
+                        Votre commande pèse actuellement <strong>{{ totalWeight }} kg</strong>
+                    </p>
+                </div>
             </div>
         </div>
     </div>
@@ -188,6 +266,32 @@ onMounted(() => {
                 }
             }
         }
+
+        &__info-button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.25rem;
+            vertical-align: middle;
+            transition: all 0.3s ease;
+            color: #666;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+
+            &:hover {
+                color: #b39966;
+                background-color: rgba(179, 153, 102, 0.1);
+            }
+
+            svg {
+                width: 16px;
+                height: 16px;
+            }
+        }
     }
 
     &__empty {
@@ -215,6 +319,101 @@ onMounted(() => {
 
             &:hover {
                 opacity: 0.9;
+            }
+        }
+    }
+
+    &__modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+
+        &__overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        &__content {
+            position: relative;
+            background-color: #fff;
+            padding: 2rem;
+            border-radius: 4px;
+            max-width: 90%;
+            width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            z-index: 1;
+
+            h2 {
+                margin-bottom: 1.5rem;
+                font-size: 1.5rem;
+            }
+        }
+
+        &__close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            line-height: 1;
+            transition: opacity 0.3s ease;
+
+            &:hover {
+                opacity: 0.7;
+            }
+        }
+
+        &__shipping-info {
+            ul {
+                list-style: none;
+                padding: 0;
+                margin: 1.5rem 0;
+
+                li {
+                    display: flex;
+                    justify-content: space-between;
+                    padding: 0.75rem 0;
+                    border-bottom: 1px solid #eee;
+
+                    &:last-child {
+                        border-bottom: none;
+                    }
+                }
+            }
+
+            &__weight {
+                font-weight: 500;
+            }
+
+            &__price {
+                color: #b39966;
+                font-weight: 600;
+            }
+
+            &__current {
+                margin-top: 1.5rem;
+                padding-top: 1.5rem;
+                border-top: 1px solid #eee;
+                text-align: center;
+                color: #666;
+
+                strong {
+                    color: #000;
+                }
             }
         }
     }
