@@ -149,6 +149,11 @@ onMounted(() => {
                         </table>
                     </div>
                 </div>
+                <div class="cart__actions">
+                    <a href="/paiement" class="cart__actions__button">
+                        Procéder au paiement
+                    </a>
+                </div>
             </template>
 
             <div v-else class="cart__empty">
@@ -414,6 +419,27 @@ onMounted(() => {
                 strong {
                     color: #000;
                 }
+            }
+        }
+    }
+
+    &__actions {
+        margin-top: 2rem;
+        text-align: right;
+
+        &__button {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background-color: #b39966;
+            color: #f3f1ed;
+            text-decoration: none;
+            font-size: 1rem;
+            border: none;
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+
+            &:hover {
+                opacity: 0.9;
             }
         }
     }

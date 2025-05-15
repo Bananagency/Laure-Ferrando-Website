@@ -1,17 +1,16 @@
 <script setup>
 import { onMounted } from "vue";
-import { total, cart, updateTotal } from "../../utils/store";
+import { totalItems, cart } from "../../utils/store";
 import { useStore } from "@nanostores/vue";
 import cartImage from "../../assets/cart.svg";
 
-const $total = useStore(total);
+const $totalItems = useStore(totalItems);
 
 onMounted(() => {
     if (typeof localStorage !== "undefined" && localStorage.getItem("cart")) {
         const cartState = JSON.parse(localStorage.getItem("cart"));
         cart.set(cartState);
     }
-    updateTotal();
 });
 </script>
 
@@ -19,8 +18,8 @@ onMounted(() => {
     <a href="/panier">
         <div class="Panier">
             <img class="Panier__image" :src="cartImage.src" alt="" />
-            <div v-if="$total > 0" class="Panier__compteur">
-                {{ $total }}
+            <div v-if="$totalItems > 0" class="Panier__compteur">
+                {{ $totalItems }}
             </div>
         </div>
     </a>
