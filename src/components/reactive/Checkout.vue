@@ -9,6 +9,11 @@ const $shipping = useStore(shipping);
 const $weight = useStore(weight);
 const $total = useStore(total);
 const sameAddress = ref(false);
+const orderStatus = ref('pending'); // 'pending', 'success', 'error'
+const orderError = ref('');
+const orderDetails = ref(null);
+
+const endPoint = import.meta.env.PUBLIC_API_URL;
 
 const formData = ref({
     shipping: {
@@ -63,10 +68,73 @@ onMounted(() => {
     calculateTotals();
 });
 
-const handleSubmit = (e) => {
+const handleSubmit = async (e) => {
     e.preventDefault();
-    // Logique de soumission du formulaire à implémenter
-    console.log('Formulaire soumis:', formData.value);
+    orderStatus.value = 'pending';
+    orderError.value = '';
+    
+    try {
+        const orderData = {
+            payment_method: "bacs",
+            payment_method_title: "Virement bancaire",
+            set_paid: false,
+            billing: {
+                first_name: formData.value.billing.firstName,
+                last_name: formData.value.billing.lastName,
+                address_1: formData.value.billing.address,
+                city: formData.value.billing.city,
+                postcode: formData.value.billing.postalCode,
+                country: formData.value.billing.country
+            },
+            shipping: {
+                first_name: formData.value.shipping.firstName,
+                last_name: formData.value.shipping.lastName,
+                address_1: formData.value.shipping.address,
+                city: formData.value.shipping.city,
+                postcode: formData.value.shipping.postalCode,
+                country: formData.value.shipping.country,
+                phone: formData.value.shipping.phone
+            },
+            line_items: $cart.value.map(item => ({
+                product_id: item.id,
+                quantity: item.quantity
+            })),
+            shipping_lines: [
+                {
+                    method_id: "flat_rate",
+                    method_title: "Livraison standard",
+                    total: $shipping.value.toString()
+                }
+            ],
+            customer_note: "Commande depuis le site web"
+        };
+
+        const response = await fetch('/api/create-order', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(orderData)
+        });
+
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.error || 'Erreur lors de la création de la commande');
+        }
+
+        const order = await response.json();
+        orderDetails.value = order;
+        orderStatus.value = 'success';
+        
+        // Vider le panier après la commande réussie
+        localStorage.removeItem('cart');
+        cart.set([]);
+        
+    } catch (error) {
+        console.error('Erreur:', error);
+        orderStatus.value = 'error';
+        orderError.value = error.message;
+    }
 };
 
 const toggleBillingAddress = () => {
@@ -81,8 +149,32 @@ const toggleBillingAddress = () => {
         <div class="checkout__container">
             <h1>Paiement</h1>
             
-            <div class="checkout__grid">
-                <form @submit="handleSubmit" class="checkout__form">
+            <div v-if="orderStatus === 'success'" class="checkout__success">
+                <div class="checkout__success-icon">✓</div>
+                <h2>Commande confirmée !</h2>
+                <p>Votre commande a été enregistrée avec succès.</p>
+                <div class="checkout__success-details">
+                    <h3>Détails de la commande</h3>
+                    <p>Numéro de commande : #{{ orderDetails?.id }}</p>
+                    <p>Total : {{ orderDetails?.total }} €</p>
+                    <p>Mode de paiement : {{ orderDetails?.payment_method_title }}</p>
+                </div>
+                <div class="checkout__success-actions">
+                    <a href="/" class="checkout__success-button">Retour à l'accueil</a>
+                </div>
+            </div>
+
+            <div v-else-if="orderStatus === 'error'" class="checkout__error">
+                <div class="checkout__error-icon">!</div>
+                <h2>Une erreur est survenue</h2>
+                <p>{{ orderError }}</p>
+                <button @click="orderStatus = 'pending'" class="checkout__error-button">
+                    Réessayer
+                </button>
+            </div>
+
+            <div v-else class="checkout__grid">
+                <form @submit="handleSubmit" class="checkout__form" id="checkout-form">
                     <div class="checkout__section">
                         <h2>Adresse de livraison</h2>
                         <div class="checkout__form-group">
@@ -505,6 +597,126 @@ const toggleBillingAddress = () => {
 
         @media screen and (max-width: 768px) {
             padding: 0.875rem 1.5rem;
+        }
+    }
+
+    &__success,
+    &__error {
+        max-width: 600px;
+        margin: 2rem auto;
+        padding: 2rem;
+        text-align: center;
+        background-color: #fafafa;
+        border-radius: 4px;
+
+        @media screen and (max-width: 768px) {
+            margin: 1rem auto;
+            padding: 1.5rem;
+        }
+
+        h2 {
+            margin: 1rem 0;
+            font-size: 1.5rem;
+            color: #333;
+
+            @media screen and (max-width: 768px) {
+                font-size: 1.25rem;
+            }
+        }
+
+        p {
+            color: #666;
+            margin-bottom: 1rem;
+        }
+    }
+
+    &__success {
+        &-icon {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto;
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+        }
+
+        &-details {
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background-color: white;
+            border-radius: 4px;
+            text-align: left;
+
+            h3 {
+                margin-bottom: 1rem;
+                font-size: 1.2rem;
+                color: #333;
+            }
+
+            p {
+                margin: 0.5rem 0;
+                color: #666;
+            }
+        }
+
+        &-actions {
+            margin-top: 2rem;
+        }
+
+        &-button {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background-color: #b39966;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: opacity 0.3s ease;
+
+            &:hover {
+                opacity: 0.9;
+            }
+
+            @media screen and (max-width: 768px) {
+                padding: 0.875rem 1.5rem;
+            }
+        }
+    }
+
+    &__error {
+        &-icon {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto;
+            background-color: #f44336;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+        }
+
+        &-button {
+            margin-top: 1rem;
+            padding: 1rem 2rem;
+            background-color: #b39966;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+
+            &:hover {
+                opacity: 0.9;
+            }
+
+            @media screen and (max-width: 768px) {
+                padding: 0.875rem 1.5rem;
+            }
         }
     }
 }

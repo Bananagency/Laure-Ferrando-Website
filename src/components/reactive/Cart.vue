@@ -89,27 +89,27 @@ onMounted(() => {
                     <div class="cart__items">
                         <ul>
                             <li v-for="article in $cart" :key="article.id">
-                                <CartItem
-                                    :article="article.id"
-                                    :title="article.name"
-                                    :image="article.image"
-                                    :price="article.price"
-                                    :quantity="article.quantity"
+                        <CartItem
+                            :article="article.id"
+                            :title="article.name"
+                            :image="article.image"
+                            :price="article.price"
+                            :quantity="article.quantity"
                                     :weight="parseFloat(article.weight)"
                                     @update-quantity="handleQuantityUpdate"
-                                />
-                            </li>
-                        </ul>
-                    </div>
+                        />
+                    </li>
+                </ul>
+            </div>
 
                     <div class="cart__summary">
                         <h2>Résumé de la commande</h2>
                         <table>
-                            <tbody>
+                    <tbody>
                                 <tr>
-                                    <td>Sous-total</td>
-                                    <td>{{ subTotal }} €</td>
-                                </tr>
+                            <td>Sous-total</td>
+                            <td>{{ subTotal }} €</td>
+                        </tr>
                                 <tr>
                                     <td>Poids total</td>
                                     <td>{{ totalWeight }} kg</td>
@@ -139,16 +139,16 @@ onMounted(() => {
                                             </svg>
                                         </button>
                                     </td>
-                                    <td>{{ shipping }} €</td>
-                                </tr>
+                            <td>{{ shipping }} €</td>
+                        </tr>
                                 <tr class="total">
-                                    <td>Total</td>
-                                    <td>{{ total }} €</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                            <td>Total</td>
+                            <td>{{ total }} €</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
                 <div class="cart__actions">
                     <a href="/paiement" class="cart__actions__button">
                         Procéder au paiement
@@ -228,7 +228,7 @@ onMounted(() => {
 
         @media screen and (min-width: 992px) {
             grid-template-columns: 2fr 1fr;
-        }
+            }
     }
 
     &__items {
@@ -250,16 +250,16 @@ onMounted(() => {
         }
 
         table {
-            width: 100%;
-            margin: 1rem 0;
-            border-collapse: collapse;
+                width: 100%;
+                margin: 1rem 0;
+                border-collapse: collapse;
 
-            tr {
-                height: 48px;
+                tr {
+                    height: 48px;
                 
-                td {
-                    &:last-child {
-                        text-align: right;
+                    td {
+                        &:last-child {
+                            text-align: right;
                     }
                 }
 
