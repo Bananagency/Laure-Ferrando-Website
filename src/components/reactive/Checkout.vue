@@ -13,8 +13,6 @@ const orderStatus = ref('pending'); // 'pending', 'success', 'error'
 const orderError = ref('');
 const orderDetails = ref(null);
 
-const endPoint = import.meta.env.PUBLIC_API_URL;
-
 const formData = ref({
     shipping: {
         firstName: '',
@@ -156,8 +154,32 @@ const toggleBillingAddress = () => {
                 <div class="checkout__success-details">
                     <h3>Détails de la commande</h3>
                     <p>Numéro de commande : #{{ orderDetails?.id }}</p>
+                    <p>Date de la commande : {{ new Date(orderDetails?.date_created).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' }) }}</p>
+                    <p>Cout de la livraison : {{ orderDetails?.shipping_total }} €</p>
                     <p>Total : {{ orderDetails?.total }} €</p>
                     <p>Mode de paiement : {{ orderDetails?.payment_method_title }}</p>
+
+                    <div class="checkout__success-address">
+                        <h4>Adresse de livraison</h4>
+                        <p>{{ orderDetails?.shipping.first_name }} {{ orderDetails?.shipping.last_name }}</p>
+                        <p>{{ orderDetails?.shipping.address_1 }}</p>
+                        <p>{{ orderDetails?.shipping.postcode }} {{ orderDetails?.shipping.city }}</p>
+                        <p>{{ orderDetails?.shipping.country }}</p>
+                        <p>Téléphone : {{ orderDetails?.shipping.phone }}</p>
+                    </div>
+
+                    <div class="checkout__success-items">
+                        <h4>Produits commandés</h4>
+                        <ul>
+                            <li v-for="item in orderDetails?.line_items" :key="item.id" class="checkout__success-item">
+                                <div class="checkout__success-item-info">
+                                    <span class="checkout__success-item-name">{{ item.name }}</span>
+                                    <span class="checkout__success-item-quantity">x{{ item.quantity }}</span>
+                                </div>
+                                <span class="checkout__success-item-price">{{ item.total }} €</span>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
                 <div class="checkout__success-actions">
                     <a href="/" class="checkout__success-button">Retour à l'accueil</a>
@@ -657,9 +679,63 @@ const toggleBillingAddress = () => {
                 color: #333;
             }
 
+            h4 {
+                margin: 1.5rem 0 0.75rem;
+                font-size: 1.1rem;
+                color: #333;
+            }
+
             p {
                 margin: 0.5rem 0;
                 color: #666;
+            }
+        }
+
+        &-address {
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #eee;
+        }
+
+        &-items {
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #eee;
+
+            ul {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+            }
+        }
+
+        &-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #eee;
+
+            &:last-child {
+                border-bottom: none;
+            }
+
+            &-info {
+                display: flex;
+                flex-direction: column;
+                gap: 0.25rem;
+            }
+
+            &-name {
+                font-weight: 500;
+            }
+
+            &-quantity {
+                font-size: 0.9rem;
+                color: #666;
+            }
+
+            &-price {
+                font-weight: 500;
             }
         }
 
