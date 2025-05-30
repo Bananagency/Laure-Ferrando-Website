@@ -1,0 +1,388 @@
+---
+import { Fetcher } from "../../utils/fetchUtils";
+import Layout from "../../layouts/Layout.astro";
+
+const { order } = Astro.params;
+const key = Astro.url.searchParams.get('key');
+
+if (!key || !key.startsWith('wc_order_')) {
+    return Astro.redirect('/404');
+}
+
+const fetcher = new Fetcher();
+const orderData = await fetcher.fetchData(`/wp-json/wc/v3/orders/${order}`);
+
+// Vérification que la clé de la commande correspond
+if (!orderData || orderData.order_key !== key) {
+    return Astro.redirect('/404');
+}
+
+const formatDate = (dateString: string): string => {
+    return new Date(dateString).toLocaleDateString('fr-FR', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+};
+
+type OrderStatus = 'pending' | 'processing' | 'completed' | 'cancelled' | 'failed';
+
+const getStatusLabel = (status: OrderStatus): string => {
+    const statusMap: Record<OrderStatus, string> = {
+        'pending': 'En attente de paiement',
+        'processing': 'En cours de traitement',
+        'completed': 'Terminée',
+        'cancelled': 'Annulée',
+        'failed': 'Échouée'
+    };
+    return statusMap[status] || status;
+};
+
+const getStatusClass = (status: OrderStatus): string => {
+    const statusMap: Record<OrderStatus, string> = {
+        'pending': 'status-pending',
+        'processing': 'status-processing',
+        'completed': 'status-completed',
+        'cancelled': 'status-cancelled',
+        'failed': 'status-failed'
+    };
+    return statusMap[status] || '';
+};
+
+interface LineItem {
+    id: number;
+    name: string;
+    quantity: number;
+    total: string;
+    image?: {
+        src: string;
+    };
+}
+---
+
+<Layout>
+    <div class="order">
+        <div class="order__container">
+            <h1>Détails de la commande #{orderData?.number}</h1>
+            
+            {orderData ? (
+                <div class="order__content">
+                    <div class="order__header">
+                        <div class="order__status">
+                            <span class={`status-badge ${getStatusClass(orderData.status as OrderStatus)}`}>
+                                {getStatusLabel(orderData.status as OrderStatus)}
+                            </span>
+                        </div>
+                        <div class="order__date">
+                            <p>Commande passée le {formatDate(orderData.date_created)}</p>
+                        </div>
+                    </div>
+
+                    <div class="order__grid">
+                        <div class="order__details">
+                            <div class="order__section">
+                                <h2>Adresse de livraison</h2>
+                                <div class="order__address">
+                                    <p>{orderData.shipping.first_name} {orderData.shipping.last_name}</p>
+                                    <p>{orderData.shipping.address_1}</p>
+                                    <p>{orderData.shipping.postcode} {orderData.shipping.city}</p>
+                                    <p>{orderData.shipping.country}</p>
+                                    {orderData.shipping.phone && <p>Téléphone : {orderData.shipping.phone}</p>}
+                                </div>
+                            </div>
+
+                            <div class="order__section">
+                                <h2>Adresse de facturation</h2>
+                                <div class="order__address">
+                                    <p>{orderData.billing.first_name} {orderData.billing.last_name}</p>
+                                    <p>{orderData.billing.address_1}</p>
+                                    <p>{orderData.billing.postcode} {orderData.billing.city}</p>
+                                    <p>{orderData.billing.country}</p>
+                                    <p>Email : {orderData.billing.email}</p>
+                                    <p>Téléphone : {orderData.billing.phone}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="order__summary">
+                            <div class="order__section">
+                                <h2>Récapitulatif</h2>
+                                <div class="order__items">
+                                    {orderData.line_items.map((item: LineItem) => (
+                                        <div class="order__item">
+                                            <div class="order__item-info">
+                                                <img 
+                                                    src={item.image?.src} 
+                                                    alt={item.name}
+                                                    class="order__item-image"
+                                                />
+                                                <div class="order__item-details">
+                                                    <h3>{item.name}</h3>
+                                                    <p>Quantité : {item.quantity}</p>
+                                                </div>
+                                            </div>
+                                            <div class="order__item-price">
+                                                {item.total} €
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+
+                                <div class="order__totals">
+                                    <div class="order__total-row">
+                                        <span>Sous-total</span>
+                                        <span>{orderData.total - parseFloat(orderData.shipping_total)} €</span>
+                                    </div>
+                                    <div class="order__total-row">
+                                        <span>Livraison</span>
+                                        <span>{orderData.shipping_total} €</span>
+                                    </div>
+                                    <div class="order__total-row total">
+                                        <span>Total</span>
+                                        <span>{orderData.total} €</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {orderData.needs_payment && (
+                        <div class="order__payment">
+                            <a href={orderData.payment_url} class="order__payment-button">
+                                Procéder au paiement
+                            </a>
+                        </div>
+                    )}
+                </div>
+            ) : (
+                <div class="order__error">
+                    <h2>Aucune commande trouvée</h2>
+                    <p>La commande que vous recherchez n'existe pas ou a été supprimée.</p>
+                </div>
+            )}
+        </div>
+    </div>
+</Layout>
+
+<style lang="scss" scoped>
+.order {
+    max-width: 1280px;
+    margin: 4rem auto;
+    padding: 0 2rem;
+
+    @media screen and (max-width: 768px) {
+        margin: 2rem auto;
+        padding: 0 1rem;
+    }
+
+    &__container {
+        h1 {
+            margin-bottom: 2rem;
+            font-size: 2rem;
+
+            @media screen and (max-width: 768px) {
+                font-size: 1.5rem;
+                margin-bottom: 1.5rem;
+            }
+        }
+    }
+
+    &__content {
+        background-color: #fafafa;
+        border-radius: 4px;
+        padding: 2rem;
+
+        @media screen and (max-width: 768px) {
+            padding: 1.5rem;
+        }
+    }
+
+    &__header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid #eee;
+
+        @media screen and (max-width: 768px) {
+            flex-direction: column;
+            gap: 1rem;
+            align-items: flex-start;
+        }
+    }
+
+    &__date {
+        color: #666;
+        font-size: 0.9rem;
+    }
+
+    &__grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 2rem;
+
+        @media screen and (min-width: 992px) {
+            grid-template-columns: 1.5fr 1fr;
+        }
+    }
+
+    &__section {
+        margin-bottom: 2rem;
+
+        h2 {
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+
+            @media screen and (max-width: 768px) {
+                font-size: 1.25rem;
+                margin-bottom: 1rem;
+            }
+        }
+    }
+
+    &__address {
+        p {
+            margin: 0.5rem 0;
+            color: #666;
+        }
+    }
+
+    &__items {
+        margin-bottom: 2rem;
+    }
+
+    &__item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem 0;
+        border-bottom: 1px solid #eee;
+
+        &:last-child {
+            border-bottom: none;
+        }
+
+        &-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        &-image {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+
+        &-details {
+            h3 {
+                margin: 0;
+                font-size: 1rem;
+            }
+
+            p {
+                margin: 0.25rem 0 0;
+                color: #666;
+                font-size: 0.9rem;
+            }
+        }
+
+        &-price {
+            font-weight: 500;
+        }
+    }
+
+    &__totals {
+        margin-top: 2rem;
+        padding-top: 1rem;
+        border-top: 1px solid #eee;
+    }
+
+    &__total-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.5rem 0;
+        color: #666;
+
+        &.total {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #000;
+            font-weight: 900;
+            color: #000;
+        }
+    }
+
+    &__payment {
+        margin-top: 2rem;
+        text-align: center;
+    }
+
+    &__payment-button {
+        display: inline-block;
+        padding: 1rem 2rem;
+        background-color: #b39966;
+        color: #f3f1ed;
+        text-decoration: none;
+        border-radius: 4px;
+        transition: opacity 0.3s ease;
+
+        &:hover {
+            opacity: 0.9;
+        }
+    }
+
+    &__error {
+        text-align: center;
+        padding: 4rem 2rem;
+        background-color: #fafafa;
+        border-radius: 4px;
+
+        h2 {
+            margin-bottom: 1rem;
+            color: #333;
+        }
+
+        p {
+            color: #666;
+        }
+    }
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    font-weight: 500;
+
+    &.status-pending {
+        background-color: #fff3cd;
+        color: #856404;
+    }
+
+    &.status-processing {
+        background-color: #cce5ff;
+        color: #004085;
+    }
+
+    &.status-completed {
+        background-color: #d4edda;
+        color: #155724;
+    }
+
+    &.status-cancelled {
+        background-color: #f8d7da;
+        color: #721c24;
+    }
+
+    &.status-failed {
+        background-color: #f8d7da;
+        color: #721c24;
+    }
+}
+</style>

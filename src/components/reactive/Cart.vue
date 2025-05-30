@@ -4,12 +4,12 @@ import { useStore } from "@nanostores/vue";
 import { cart, updateCartItemQuantity } from "../../utils/store";
 import { computed, onMounted, ref, watch } from "vue";
 
+const isClient = ref(false);
 const subTotal = ref(0);
 const shipping = ref(0);
 const totalWeight = ref(0);
 const total = computed(() => subTotal.value + shipping.value);
 const showShippingInfo = ref(false);
-
 const isLoading = ref(true);
 
 const $cart = ref(useStore(cart));
@@ -68,6 +68,7 @@ watch(
 );
 
 onMounted(() => {
+    isClient.value = true;
     if ($cart.value.length === 0) {
         isLoading.value = false;
     } else {
@@ -79,7 +80,7 @@ onMounted(() => {
 
 <template>
     <div class="cart">
-        <div class="cart__wrapper">
+        <div v-if="isClient" class="cart__wrapper">
             <template v-if="$cart && $cart.length > 0">
                 <div class="cart__header">
                     <h1>Mon panier</h1>
@@ -161,6 +162,12 @@ onMounted(() => {
                 <a href="/boutique">
                     <button>Continuer mes achats</button>
                 </a>
+            </div>
+        </div>
+        <div v-else class="cart__wrapper">
+            <div class="cart__loading">
+                <div class="cart__loader"></div>
+                <p>Chargement de votre panier...</p>
             </div>
         </div>
 
@@ -443,5 +450,34 @@ onMounted(() => {
             }
         }
     }
+}
+
+.cart__loading {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: #666;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+
+    p {
+        font-size: 1.1rem;
+        margin: 0;
+    }
+}
+
+.cart__loader {
+    width: 48px;
+    height: 48px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #b39966;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 </style>

@@ -1,13 +1,28 @@
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { useStore } from '@nanostores/vue';
 import { cart, subTotal, shipping, weight, total } from '../../utils/store';
+import { Fetcher } from '../../utils/fetchUtils';
+
+const isClient = ref(false);
+
+onMounted(() => {
+    isClient.value = true;
+});
 
 const $cart = useStore(cart);
 const $subTotal = useStore(subTotal);
 const $shipping = useStore(shipping);
 const $weight = useStore(weight);
 const $total = useStore(total);
+
+// Initialisation des valeurs avec des valeurs par défaut
+const cartItems = computed(() => $cart.value || []);
+const subtotalValue = computed(() => $subTotal.value || 0);
+const shippingValue = computed(() => $shipping.value || 0);
+const weightValue = computed(() => $weight.value || 0);
+const totalValue = computed(() => $total.value || 0);
+
 const sameAddress = ref(false);
 const orderStatus = ref('pending'); // 'pending', 'success', 'error'
 const orderError = ref('');
@@ -15,135 +30,110 @@ const orderDetails = ref(null);
 
 const formData = ref({
     shipping: {
-        firstName: '',
-        lastName: '',
+        first_name: '',
+        last_name: '',
         address: '',
         city: '',
-        postalCode: '',
+        postcode: '',
         country: 'France',
         phone: '',
         email: ''
     },
     billing: {
-        firstName: '',
-        lastName: '',
+        first_name: '',
+        last_name: '',
         address: '',
         city: '',
-        postalCode: '',
+        postcode: '',
         country: 'France'
-    }
+    },
+    payment_method: "sumup",
+    payment_method_title: "Carte bancaire",
+    set_paid: false,
+    line_items: $cart.value,
+    shipping_lines: [{
+        method_id: "flat_rate",
+        method_title: "Livraison standard",
+        total: $shipping.value
+    }]
 });
 
-const calculateShipping = (weight) => {
-    if (weight < 1) {
-        return 5;
-    } else if (weight >= 1 && weight <= 5) {
-        return 10;
-    } else {
-        return 15;
-    }
-};
 
-const calculateTotals = () => {
-    if ($cart.value.length > 0) {
-        let totalPrice = 0;
-        let totalW = 0;
-        $cart.value.forEach((item) => {
-            totalPrice += item.quantity * item.price;
-            totalW += item.quantity * (item.weight || 0);
-        });
-        $subTotal.value = totalPrice;
-        $weight.value = parseFloat(totalW.toFixed(2));
-        $shipping.value = calculateShipping($weight.value);
-    }
-};
-
-onMounted(() => {
-    const cartData = JSON.parse(localStorage.getItem('cart') || '[]');
-    if (cartData.length === 0) {
-        window.location.href = '/panier';
-    }
-    calculateTotals();
-});
-
-const handleSubmit = async (e) => {
-    e.preventDefault();
-    orderStatus.value = 'pending';
-    orderError.value = '';
-    
-    try {
-        const orderData = {
-            payment_method: "bacs",
-            payment_method_title: "Virement bancaire",
-            set_paid: false,
-            billing: {
-                first_name: formData.value.billing.firstName,
-                last_name: formData.value.billing.lastName,
-                address_1: formData.value.billing.address,
-                city: formData.value.billing.city,
-                postcode: formData.value.billing.postalCode,
-                country: formData.value.billing.country
-            },
-            shipping: {
-                first_name: formData.value.shipping.firstName,
-                last_name: formData.value.shipping.lastName,
-                address_1: formData.value.shipping.address,
-                city: formData.value.shipping.city,
-                postcode: formData.value.shipping.postalCode,
-                country: formData.value.shipping.country,
-                phone: formData.value.shipping.phone
-            },
-            line_items: $cart.value.map(item => ({
-                product_id: item.id,
-                quantity: item.quantity
-            })),
-            shipping_lines: [
-                {
-                    method_id: "flat_rate",
-                    method_title: "Livraison standard",
-                    total: $shipping.value.toString()
-                }
-            ],
-            customer_note: "Commande depuis le site web"
-        };
-
-        const response = await fetch('/api/create-order', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(orderData)
-        });
-
-        if (!response.ok) {
-            const error = await response.json();
-            throw new Error(error.error || 'Erreur lors de la création de la commande');
-        }
-
-        const order = await response.json();
-        orderDetails.value = order;
-        orderStatus.value = 'success';
-        
-        // Vider le panier après la commande réussie
-        localStorage.removeItem('cart');
-        cart.set([]);
-        
-    } catch (error) {
-        console.error('Erreur:', error);
-        orderStatus.value = 'error';
-        orderError.value = error.message;
-    }
-};
-
-const toggleBillingAddress = () => {
+const handleSubmit = async () => {
     if (!sameAddress.value) {
-        formData.value.billing = { ...formData.value.shipping };
+        formData.value.billing = {
+            first_name: formData.value.shipping.first_name,
+            last_name: formData.value.shipping.last_name,
+            address: formData.value.shipping.address,
+            city: formData.value.shipping.city,
+            postcode: formData.value.shipping.postcode,
+            country: formData.value.shipping.country
+        };
     }
-};
+    const orderData = {
+        payment_method: "sumup",
+        payment_method_title: "Carte bancaire",
+        set_paid: false,
+        status: "pending",
+        billing: {
+            first_name: formData.value.billing.first_name,
+            last_name: formData.value.billing.last_name,
+            address_1: formData.value.billing.address,
+            city: formData.value.billing.city,
+            postcode: formData.value.billing.postcode,
+            country: formData.value.billing.country,
+            email: formData.value.shipping.email,
+            phone: formData.value.shipping.phone,
+            state: ""
+        },
+        shipping: {
+            first_name: formData.value.shipping.first_name,
+            last_name: formData.value.shipping.last_name,
+            address_1: formData.value.shipping.address,
+            city: formData.value.shipping.city,
+            postcode: formData.value.shipping.postcode,
+            country: formData.value.shipping.country,
+            state: ""
+        },
+        line_items: $cart.value.map(item => ({
+            product_id: parseInt(item.id),
+            quantity: parseInt(item.quantity),
+            total: (parseFloat(item.price) * parseInt(item.quantity)).toString()
+        })),
+        shipping_lines: [{
+            method_id: "flat_rate",
+            method_title: "Livraison standard",
+            total: parseFloat($shipping.value).toString()
+        }],
+        total: parseFloat($total.value).toString()
+    };
+
+    console.log('📦 Données envoyées:', orderData);
+
+    const fetcher = new Fetcher();
+    const response = await fetcher.fetchData('/wp-json/wc/v3/orders', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(orderData)
+    }); 
+
+    console.log('✅ Réponse reçue:', response);
+    
+    if (response && response.id) {
+        orderDetails.value = response;
+        orderStatus.value = 'success';
+        cart.set([]);
+    } else {
+        throw new Error('Réponse invalide de l\'API');
+    }
+}
+
 </script>
 
 <template>
-    <div class="checkout">
+    <div v-if="isClient" class="checkout" client:only="vue">
         <div class="checkout__container">
             <h1>Paiement</h1>
             
@@ -196,7 +186,7 @@ const toggleBillingAddress = () => {
             </div>
 
             <div v-else class="checkout__grid">
-                <form @submit="handleSubmit" class="checkout__form" id="checkout-form">
+                <form class="checkout__form" id="checkout-form">
                     <div class="checkout__section">
                         <h2>Adresse de livraison</h2>
                         <div class="checkout__form-group">
@@ -206,7 +196,7 @@ const toggleBillingAddress = () => {
                                     <input 
                                         type="text" 
                                         id="shipping-firstName" 
-                                        v-model="formData.shipping.firstName" 
+                                        v-model="formData.shipping.first_name" 
                                         required
                                     >
                                 </div>
@@ -215,7 +205,7 @@ const toggleBillingAddress = () => {
                                     <input 
                                         type="text" 
                                         id="shipping-lastName" 
-                                        v-model="formData.shipping.lastName" 
+                                        v-model="formData.shipping.last_name" 
                                         required
                                     >
                                 </div>
@@ -246,7 +236,7 @@ const toggleBillingAddress = () => {
                                     <input 
                                         type="text" 
                                         id="shipping-postalCode" 
-                                        v-model="formData.shipping.postalCode" 
+                                        v-model="formData.shipping.postcode" 
                                         required
                                     >
                                 </div>
@@ -294,7 +284,7 @@ const toggleBillingAddress = () => {
                                     <input 
                                         type="text" 
                                         id="billing-firstName" 
-                                        v-model="formData.billing.firstName" 
+                                        v-model="formData.billing.first_name" 
                                         required
                                     >
                                 </div>
@@ -303,7 +293,7 @@ const toggleBillingAddress = () => {
                                     <input 
                                         type="text" 
                                         id="billing-lastName" 
-                                        v-model="formData.billing.lastName" 
+                                        v-model="formData.billing.last_name" 
                                         required
                                     >
                                 </div>
@@ -334,7 +324,7 @@ const toggleBillingAddress = () => {
                                     <input 
                                         type="text" 
                                         id="billing-postalCode" 
-                                        v-model="formData.billing.postalCode" 
+                                        v-model="formData.billing.postcode" 
                                         required
                                     >
                                 </div>
@@ -348,7 +338,7 @@ const toggleBillingAddress = () => {
                         <h2>Récapitulatif de la commande</h2>
                         <div class="checkout__summary__items">
                             <ul>
-                                <li v-for="item in $cart" :key="item.id" class="checkout__summary__item">
+                                <li v-for="item in cartItems" :key="item.id" class="checkout__summary__item">
                                     <div class="checkout__summary__item__info">
                                         <span class="checkout__summary__item__name">{{ item.name }}</span>
                                         <span class="checkout__summary__item__quantity">x{{ item.quantity }}</span>
@@ -361,27 +351,36 @@ const toggleBillingAddress = () => {
                             <tbody>
                                 <tr>
                                     <td>Sous-total</td>
-                                    <td>{{ $subTotal }} €</td>
+                                    <td>{{ subtotalValue }} €</td>
                                 </tr>
                                 <tr>
                                     <td>Poids total</td>
-                                    <td>{{ $weight }} kg</td>
+                                    <td>{{ weightValue }} kg</td>
                                 </tr>
                                 <tr>
                                     <td>Livraison</td>
-                                    <td>{{ $shipping }} €</td>
+                                    <td>{{ shippingValue }} €</td>
                                 </tr>
                                 <tr class="total">
                                     <td>Total</td>
-                                    <td>{{ $total }} €</td>
+                                    <td>{{ totalValue }} €</td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
-                    <button type="submit" form="checkout-form" class="checkout__submit">
+                    <button @click.prevent="handleSubmit" class="checkout__submit">
                         Procéder au paiement
                     </button>
                 </div>
+            </div>
+        </div>
+    </div>
+    <div v-else class="checkout">
+        <div class="checkout__container">
+            <h1>Paiement</h1>
+            <div class="checkout__loading">
+                <div class="checkout__loader"></div>
+                <p>Chargement de votre panier...</p>
             </div>
         </div>
     </div>
@@ -795,5 +794,34 @@ const toggleBillingAddress = () => {
             }
         }
     }
+}
+
+.checkout__loading {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: #666;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+
+    p {
+        font-size: 1.1rem;
+        margin: 0;
+    }
+}
+
+.checkout__loader {
+    width: 48px;
+    height: 48px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #b39966;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 </style>
