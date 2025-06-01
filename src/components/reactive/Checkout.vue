@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue';
 import { useStore } from '@nanostores/vue';
-import { cart, subTotal, shipping, weight, total } from '../../utils/store';
+import { cart, subTotal, shipping, weight, total, updateTotals } from '../../utils/store';
 import { Fetcher } from '../../utils/fetchUtils';
 
 const isClient = ref(false);
@@ -110,23 +110,30 @@ const handleSubmit = async () => {
 
     console.log('📦 Données envoyées:', orderData);
 
-    const fetcher = new Fetcher();
-    const response = await fetcher.fetchData('/wp-json/wc/v3/orders', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(orderData)
-    }); 
+    try {
+        const fetcher = new Fetcher();
+        const response = await fetcher.fetchData('/wp-json/wc/v3/orders', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(orderData)
+        }); 
 
-    console.log('✅ Réponse reçue:', response);
-    
-    if (response && response.id) {
-        orderDetails.value = response;
-        orderStatus.value = 'success';
-        cart.set([]);
-    } else {
-        throw new Error('Réponse invalide de l\'API');
+        console.log('✅ Réponse reçue:', response);
+        
+        if (response && response.id) {
+            // Construction de l'URL de paiement WooCommerce
+            const paymentUrl = `https://admin.laure-ferrando.com/commander/order-pay/${response.id}/?pay_for_order=true&key=${response.order_key}`;
+            // Redirection vers la page de paiement
+            window.location.href = paymentUrl;
+        } else {
+            throw new Error('Réponse invalide de l\'API');
+        }
+    } catch (error) {
+        console.error('❌ Erreur:', error);
+        orderStatus.value = 'error';
+        orderError.value = error.message || 'Une erreur est survenue lors de la création de la commande';
     }
 }
 
