@@ -17,7 +17,11 @@ export class Fetcher {
       headers: headers,
     };
 
-    const response = await fetch(apiUrl + endpoint, {
+    // Normalisation de l'URL pour éviter les doublons de slash
+    let baseUrl = apiUrl.endsWith('/') ? apiUrl.slice(0, -1) : apiUrl;
+    let cleanEndpoint = endpoint.startsWith('/') ? endpoint : '/' + endpoint;
+
+    const response = await fetch(baseUrl + cleanEndpoint, {
       ...defaultOptions,
       ...options,
       headers: headers

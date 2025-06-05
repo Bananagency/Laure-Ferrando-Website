@@ -9,26 +9,26 @@ const { product } = Astro.params;
 
 const fetchComponent = new Fetcher();
 
-const data = await fetchComponent.fetchData(
-    "wp-json/wc/v3/products?slug=" + product,
-);
+let item = null;
+let fetchError = null;
 
-const item = data[0];
-
-// Log détaillé des données du produit
-console.log('📦 Données du produit:', {
-    id: item.id,
-    nom: item.name,
-    poids: item.weight,
-    type: typeof item.weight,
-    prix: item.price
-});
-
-// Vérification du poids
-if (!item.weight || item.weight === null) {
-    console.warn(`⚠️ Le produit "${item.name}" n'a pas de poids défini`);
-    item.weight = 0; // Valeur par défaut
+try {
+    const data = await fetchComponent.fetchData(
+        "wp-json/wc/v3/products?slug=" + product,
+    );
+    if (!Array.isArray(data) || data.length === 0) {
+        fetchError = "Ce produit n'existe pas ou n'est plus disponible.";
+    } else {
+        item = data[0];
+        // Vérification du poids
+        if (!item.weight || item.weight === null) {
+            item.weight = 0;
+        }
+    }
+} catch (err) {
+    fetchError = "Une erreur est survenue lors du chargement du produit. Merci de réessayer plus tard.";
 }
+
 ---
 
 <script>
@@ -43,6 +43,20 @@ if (!item.weight || item.weight === null) {
 
 <Layout>
     <div class="Product">
+        {fetchError ? (
+            <div class="Product__error">
+                <svg width="64" height="64" fill="none" viewBox="0 0 24 24" class="Product__error__icon">
+                    <circle cx="12" cy="12" r="10" fill="#ffdddd" />
+                    <path d="M9.17 9.17a3 3 0 0 1 5.66 0" stroke="#e57373" stroke-width="1.5" stroke-linecap="round"/>
+                    <ellipse cx="9" cy="13.5" rx="1" ry="1.5" fill="#e57373"/>
+                    <ellipse cx="15" cy="13.5" rx="1" ry="1.5" fill="#e57373"/>
+                </svg>
+                <h2 class="Product__error__title">Produit indisponible</h2>
+                <p class="Product__error__msg">{fetchError}</p>
+                <a href="/boutique" class="Product__error__back">Retour à la boutique</a>
+            </div>
+        ) : (
+        <>
         <div class="Product__container">
             <h1 class="Product__container__title">{item.name}</h1>
             <p class="Product__container__price">{item.price} €</p>
@@ -66,6 +80,8 @@ if (!item.weight || item.weight === null) {
                 ) : null
             }
         </div>
+        </>
+        )}
     </div>
 </Layout>
 
@@ -77,6 +93,49 @@ if (!item.weight || item.weight === null) {
         flex-direction: row-reverse;
         width: max-content;
         gap: 6.75rem;
+
+        &__error {
+            background: #f8eaea;
+            border-radius: 1rem;
+            padding: 2rem;
+            text-align: center;
+            max-width: 500px;
+            margin: 4rem auto;
+            box-shadow: 0 2px 12px #0001;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+
+            &__icon {
+                display: block;
+                margin: 0 auto 1rem auto;
+            }
+            &__title {
+                color: #b71c1c;
+                font-size: 1.5rem;
+                margin-bottom: 0.5rem;
+            }
+            &__msg {
+                color: #a94442;
+                margin: 0 auto 1.5rem auto;
+            }
+            &__back {
+                color: #fff;
+                background: #b39966;
+                padding: 0.75rem 2rem;
+                border-radius: 2rem;
+                text-decoration: none;
+                font-weight: bold;
+                display: inline-block;
+                margin-top: 1.5rem;
+                transition: background 0.2s;
+                &:hover {
+                    background: #a1864c;
+                }
+            }
+        }
+
         &__container {
             max-width: 336px;
             display: flex;

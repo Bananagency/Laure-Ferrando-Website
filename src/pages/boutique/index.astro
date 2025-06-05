@@ -13,19 +13,56 @@ interface Product {
 
 const fetchComponent = new Fetcher();
 
-const products = await fetchComponent.fetchData(
-    "wp-json/wc/v3/products?per_page=100",
-) as Product[];
+let products: Product[] = [];
+let productsWithoutWeight: Product[] = [];
+let fetchError: string | null = null;
 
-const productsWithoutWeight = products.filter((p: Product) => !p.weight || p.weight === null);
+try {
+    const result = await fetchComponent.fetchData("wp-json/wc/v3/products?per_page=100");
+    if (Array.isArray(result)) {
+        products = result;
+        productsWithoutWeight = products.filter((p: Product) => !p.weight || p.weight === null);
+    } else if (result && result.status === 401) {
+        fetchError = "Authentification échouée. Vérifiez la clé et le secret API.";
+    } else if (result === null) {
+        fetchError = "Aucun produit trouvé (404).";
+    } else {
+        fetchError = "Réponse inattendue de l'API.";
+    }
+} catch (err) {
+    fetchError = `Erreur lors de la récupération des produits : ${err instanceof Error ? err.message : String(err)}`;
+}
+
 
 ---
 
 <Layout title="Boutique">
     <div class="Boutique">
-        <div class="Boutique__products">
-            {
-                products.map((product: Product) => (
+        {fetchError ? (
+            <div class="Boutique__error" style="background:#f8eaea;border-radius:1rem;padding:2rem;text-align:center;max-width:500px;margin:2rem auto;box-shadow:0 2px 12px #0001;">
+                <svg width="64" height="64" fill="none" viewBox="0 0 24 24" style="display:block;margin:0 auto 1rem auto;">
+                    <circle cx="12" cy="12" r="10" fill="#ffdddd" />
+                    <path d="M9.17 9.17a3 3 0 0 1 5.66 0" stroke="#e57373" stroke-width="1.5" stroke-linecap="round"/>
+                    <ellipse cx="9" cy="13.5" rx="1" ry="1.5" fill="#e57373"/>
+                    <ellipse cx="15" cy="13.5" rx="1" ry="1.5" fill="#e57373"/>
+                </svg>
+                <h2 style="color:#b71c1c;font-size:1.5rem;margin-bottom:0.5rem;">La boutique est momentanément indisponible</h2>
+                <p style="color:#a94442;">Nous rencontrons un problème pour afficher les produits.<br/>Merci de réessayer plus tard ou de nous contacter si le problème persiste.</p>
+            </div>
+        ) : products.length === 0 ? (
+            <div class="Boutique__empty" style="background:#f5f5f5;border-radius:1rem;padding:2rem;text-align:center;max-width:500px;margin:2rem auto;box-shadow:0 2px 12px #0001;">
+                <svg width="64" height="64" fill="none" viewBox="0 0 24 24" style="display:block;margin:0 auto 1rem auto;">
+                    <rect x="4" y="7" width="16" height="10" rx="3" fill="#ececec" />
+                    <path d="M8 11h8M8 14h4" stroke="#bdbdbd" stroke-width="1.5" stroke-linecap="round"/>
+                    <circle cx="8.5" cy="16.5" r="1.5" fill="#bdbdbd"/>
+                    <circle cx="15.5" cy="16.5" r="1.5" fill="#bdbdbd"/>
+                </svg>
+                <h2 style="color:#555;font-size:1.5rem;margin-bottom:0.5rem;">Aucun produit disponible</h2>
+                <p style="color:#888;">Revenez bientôt pour découvrir nos nouveautés !</p>
+            </div>
+        ) : (
+            <div class="Boutique__products">
+                {products.map((product: Product) => (
                     <a
                         href={"/boutique/" + product.slug}
                         class="Boutique__products__product"
@@ -46,14 +83,19 @@ const productsWithoutWeight = products.filter((p: Product) => !p.weight || p.wei
                             {product.price} €
                         </p>
                     </a>
-                ))
-            }
-        </div>
+                ))}
+            </div>
+        )}
     </div>
 </Layout>
 
 <style lang="scss">
     .Boutique {
+        min-height: 50vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
         max-width: 1280px;
         margin: 0 auto;
         &__debug {
@@ -97,14 +139,27 @@ const productsWithoutWeight = products.filter((p: Product) => !p.weight || p.wei
         }
         &__products {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 1rem;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 1.5rem;
             padding: 2rem;
+            max-width: 1280px;
+            margin-left: auto;
+            margin-right: auto;
+            justify-items: center;
             &__product {
+                width: 100%;
+                height: 336px;
+                display: flex;
+                flex-direction: column;
+                align-items: stretch;
+                justify-content: flex-start;
+
                 &__image {
                     width: 100%;
-                    height: 336px;
+                    height: 256px;
                     object-fit: cover;
+                    flex-shrink: 0;
+                    display: block;
                 }
                 &__title {
                     font-size: 1rem;
