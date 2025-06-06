@@ -158,10 +158,18 @@ onMounted(() => {
             </template>
 
             <div v-else class="cart__empty">
-                <p>Le panier est vide 🍃</p>
-                <a href="/boutique">
-                    <button>Continuer mes achats</button>
-                </a>
+                <div class="cart__empty__content">
+                    <svg width="80" height="80" viewBox="0 0 24 24" fill="none" class="cart__empty__icon">
+                        <path d="M6 2L3 6V20C3 20.5304 3.21071 21.0391 3.58579 21.4142C3.96086 21.7893 4.46957 22 5 22H19C19.5304 22 20.0391 21.7893 20.4142 21.4142C20.7893 21.0391 21 20.5304 21 20V6L18 2H6Z" stroke="#b39966" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M3 6H21" stroke="#b39966" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M16 10C16 11.0609 15.5786 12.0783 14.8284 12.8284C14.0783 13.5786 13.0609 14 12 14C10.9391 14 9.92172 13.5786 9.17157 12.8284C8.42143 12.0783 8 11.0609 8 10" stroke="#b39966" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <h2 class="cart__empty__title">Votre panier est vide</h2>
+                    <p class="cart__empty__message">Il semble que vous n'avez pas encore ajouté d'articles à votre panier.</p>
+                    <a href="/boutique" class="cart__empty__button">
+                        Continuer mes achats
+                    </a>
+                </div>
             </div>
         </div>
         <div v-else class="cart__wrapper">
@@ -307,30 +315,57 @@ onMounted(() => {
     }
 
     &__empty {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        min-height: 50vh;
+        background: #f9f8f5;
+        border-radius: 1rem;
+        padding: 4rem 2rem;
         text-align: center;
+        margin: 2rem auto;
+        max-width: 500px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
 
-        p {
-            font-size: 2rem;
-            margin-bottom: 2rem;
+        &__content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
-        button {
-            margin-top: 1rem;
+        &__icon {
+            margin-bottom: 1.5rem;
+            color: #b39966;
+        }
+
+        &__title {
+            font-size: 1.5rem;
+            color: #342d1f;
+            margin-bottom: 0.75rem;
+            font-family: 'Lato', sans-serif;
+            font-weight: 400;
+        }
+
+        &__message {
+            color: #666;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+            max-width: 80%;
+        }
+
+        &__button {
+            background: #b39966;
+            color: white;
             border: none;
-            padding: 1rem 2rem;
-            background-color: #b39966;
-            color: #f3f1ed;
+            padding: 0.75rem 2rem;
+            border-radius: 2rem;
+            text-decoration: none;
+            font-weight: 500;
+            display: inline-block;
+            transition: all 0.3s ease;
             font-size: 1rem;
             cursor: pointer;
-            transition: opacity 0.3s ease;
 
             &:hover {
-                opacity: 0.9;
+                background: darken(#b39966, 8%);
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(179, 153, 102, 0.2);
             }
         }
     }
