@@ -1,18 +1,16 @@
 ---
 import Layout from "../../layouts/Layout.astro";
-import { Image } from "astro:assets";
+import Masonry from "../../components/reactive/Masonry.vue";
 
 export async function getStaticPaths() {
     return [
-        // { params: { /* required */ }, props: { /* optional */ } },
-        { params: { travaux: "tableaux" } }, // [post] is the parameter
-        { params: { travaux: "sculptures" } }, // must match the file name
-        { params: { travaux: "vaisselles" } }, // must match the file name
-        // ...
+        { params: { travaux: "tableaux" } },
+        { params: { travaux: "sculptures" } },
+        { params: { travaux: "vaisselles" } },
     ];
 }
 
-const { travaux } = Astro.params; // Accès au paramètre dynamique
+const { travaux } = Astro.params;
 const pageTitles: any = {
     tableaux: "Tableaux",
     sculptures: "Sculptures",
@@ -24,63 +22,134 @@ const identifiants: any = {
     vaisselles: 2,
 };
 const title = pageTitles[travaux] || "Mon travail";
-
 const identifiant = identifiants[travaux] || 0;
 
 const fetchUrl = `https://admin.laure-ferrando.com/wp-json/wp/v2/travail?categories=${identifiant}`;
 const response = await fetch(fetchUrl);
 const data = await response.json();
+
+// Transform data for the Vue component
+const images = data && data.length > 0 ? data.map((item: any) => ({
+    url: item.acf.oeuvre.url,
+    alt: item.title?.rendered || "Œuvre d'art",
+    title: item.title?.rendered || "Sans titre",
+    description: item.acf.description || ""
+})) : [];
 ---
 
 <Layout title={title}>
-    <main class="Masonry">
-        {
-            data.map((item: any) => (
-                <div class="Masonry__item">
-                    <Image
-                        loading="eager"
-                        decoding="async"
-                        src={item.acf.oeuvre.url}
-                        width={item.acf.oeuvre.width / 2}
-                        height={item.acf.oeuvre.height / 4}
-                        alt="Un logo"
-                    />
+    {
+        images.length > 0 ? (
+            <Masonry images={images} client:load />
+        ) : (
+            <main class="EmptyState">
+                <div class="EmptyState__container">
+                    <div class="EmptyState__icon">
+                        <svg
+                            width="64"
+                            height="64"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.5"
+                        >
+                            <rect
+                                x="3"
+                                y="3"
+                                width="18"
+                                height="18"
+                                rx="2"
+                                ry="2"
+                            />
+                            <circle cx="8.5" cy="8.5" r="1.5" />
+                            <polyline points="21,15 16,10 5,21" />
+                        </svg>
+                    </div>
+                    <h2 class="EmptyState__title">Aucune œuvre disponible</h2>
+                    <p class="EmptyState__description">
+                        Cette collection est actuellement vide. De nouvelles
+                        créations seront bientôt ajoutées.
+                    </p>
                 </div>
-            ))
-        }
-    </main>
+            </main>
+        )
+    }
 </Layout>
 
 <style lang="scss">
-    .Masonry {
-        column-count: 1;
-        column-gap: 0.5rem;
+    /* Empty State Styles */
+    .EmptyState {
         max-width: 1280px;
         padding: 0 2rem;
         margin: 4rem auto;
-        &__item {
-            display: inline-block;
-            margin: 0 0 0.5rem 0;
-            width: 100%;
-            img {
-                width: 100%;
-                object-fit: cover;
+        min-height: 60vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        &__container {
+            text-align: center;
+            max-width: 400px;
+            padding: 3rem 2rem;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        &__icon {
+            margin-bottom: 1.5rem;
+            color: #6c757d;
+            opacity: 0.7;
+
+            svg {
+                width: 64px;
+                height: 64px;
+                margin: 0 auto;
+                display: block;
             }
         }
-    }
-    @media screen and (min-width: 448px) {
-        .Masonry {
-            column-count: 2;
+
+        &__title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #495057;
+            margin: 0 0 1rem 0;
+            letter-spacing: -0.02em;
+        }
+
+        &__description {
+            font-size: 1rem;
+            color: #6c757d;
+            line-height: 1.6;
+            margin: 0;
+            opacity: 0.9;
         }
     }
-    @media screen and (min-width: 640px) {
-        .Masonry {
-            column-count: 3;
-        }
-    }
-    @media screen and (min-width: 992px) {
-        .Masonry {
-            column-count: 4;
+
+    /* Responsive adjustments for empty state */
+    @media screen and (max-width: 768px) {
+        .EmptyState {
+            min-height: 50vh;
+            padding: 0 1rem;
+
+            &__container {
+                padding: 2rem 1.5rem;
+                max-width: 320px;
+            }
+
+            &__icon svg {
+                width: 48px;
+                height: 48px;
+            }
+
+            &__title {
+                font-size: 1.25rem;
+            }
+
+            &__description {
+                font-size: 0.9rem;
+            }
         }
     }
 </style>

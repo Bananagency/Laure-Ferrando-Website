@@ -128,6 +128,23 @@ import CartButton from "./reactive/CartButton.vue";
                             position: relative;
                             cursor: pointer;
                             border-bottom: #342d1f solid 1px;
+
+                            span {
+                                display: flex;
+                                align-items: center;
+                                gap: 0.5rem;
+
+                                &::after {
+                                    content: "▼";
+                                    font-size: 0.8rem;
+                                    color: #b39966;
+                                    transition: transform 0.3s ease;
+                                }
+                            }
+
+                            &.dropdown-open span::after {
+                                transform: rotate(180deg);
+                            }
                         }
                         &:nth-child(2) {
                             transition-delay: 0.4s;
@@ -143,8 +160,46 @@ import CartButton from "./reactive/CartButton.vue";
                             flex-direction: column;
                             gap: 1rem;
                             margin: 1rem 0;
+                            padding: 1rem;
+                            background-color: rgba(243, 241, 237, 0.95);
+                            border-radius: 8px;
+                            border: 1px solid #342d1f;
+                            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+                            backdrop-filter: blur(10px);
+                            transform: translateY(-100vh);
+                            transition:
+                                transform 0.3s ease,
+                                opacity 0.3s ease;
+                            opacity: 0;
                             &__item {
                                 color: #b39966;
+                                transition:
+                                    color 0.2s ease,
+                                    transform 0.2s ease;
+                                padding: 0.5rem 0;
+                                border-bottom: 1px solid transparent;
+
+                                a {
+                                    text-decoration: none;
+                                    color: inherit;
+                                    display: block;
+                                    width: 100%;
+                                }
+
+                                &:hover {
+                                    color: #342d1f;
+                                    transform: translateX(5px);
+                                    border-bottom-color: #b39966;
+                                }
+
+                                &:last-child {
+                                    border-bottom: none;
+                                }
+                            }
+
+                            &.is-active {
+                                transform: translateY(0);
+                                opacity: 1;
                             }
                         }
                     }
@@ -188,31 +243,105 @@ import CartButton from "./reactive/CartButton.vue";
                             }
                             &:nth-child(1) {
                                 border: none !important;
+
                                 span {
-                                    display: inline-block;
+                                    display: inline-flex;
+                                    align-items: center;
+                                    gap: 0.5rem;
                                     position: relative;
 
                                     &::after {
                                         content: url("/src/assets/down-arrow.svg");
-                                        position: absolute;
-                                        top: 50%;
-                                        transform: translateY(-60%);
-                                        right: -1rem;
+                                        transition: transform 0.3s ease;
+                                        width: 12px;
+                                        height: 12px;
                                     }
+                                }
+
+                                &.dropdown-open span::after {
+                                    transform: rotate(180deg);
                                 }
                             }
                             &__dropdown {
                                 position: absolute;
+                                top: 100%;
                                 left: -1rem;
-                                border-top: 1px solid #342d1f;
-                                padding: 1rem;
-                                margin-top: 1rem;
-                                transform: translateY(-100vh);
+                                min-width: 200px;
                                 background-color: #f3f1ed;
-                                display: flex;
-                                flex-direction: column;
-                                gap: 1rem;
-                                z-index: -10;
+                                border: 1px solid #342d1f;
+                                border-radius: 8px;
+                                padding: 1rem;
+                                margin-top: 0.5rem;
+                                box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+                                transform: translateY(-10px);
+                                opacity: 0;
+                                visibility: hidden;
+                                transition: all 0.3s ease;
+                                z-index: 1000;
+
+                                &::before {
+                                    content: "";
+                                    position: absolute;
+                                    top: -9px;
+                                    left: 2rem;
+                                    width: 0;
+                                    height: 0;
+                                    border-left: 8px solid transparent;
+                                    border-right: 8px solid transparent;
+                                    border-bottom: 9px solid #342d1f;
+                                }
+
+                                &::after {
+                                    content: "";
+                                    position: absolute;
+                                    top: -8px;
+                                    left: 2rem;
+                                    width: 0;
+                                    height: 0;
+                                    border-left: 8px solid transparent;
+                                    border-right: 8px solid transparent;
+                                    border-bottom: 8px solid #f3f1ed;
+                                }
+
+                                &__item {
+                                    padding: 0.75rem 0;
+                                    border-bottom: 1px solid
+                                        rgba(52, 45, 31, 0.1);
+                                    transition: all 0.2s ease;
+
+                                    a {
+                                        color: #342d1f;
+                                        text-decoration: none;
+                                        font-weight: 500;
+                                        display: block;
+                                        padding: 0.25rem 0;
+                                        transition: color 0.2s ease;
+                                    }
+
+                                    &:hover {
+                                        background-color: rgba(
+                                            179,
+                                            153,
+                                            102,
+                                            0.1
+                                        );
+                                        padding-left: 0.5rem;
+
+                                        a {
+                                            color: #b39966;
+                                        }
+                                    }
+
+                                    &:last-child {
+                                        border-bottom: none;
+                                    }
+                                }
+
+                                &.is-active {
+                                    transform: translateY(0);
+                                    opacity: 1;
+                                    visibility: visible;
+                                }
                             }
                         }
                     }
@@ -239,7 +368,25 @@ import CartButton from "./reactive/CartButton.vue";
     const dropdownMenu = document.querySelector(
         ".Header__content__navigation__list__item__dropdown",
     );
-    dropdownButton?.addEventListener("click", () => {
+
+    // Toggle dropdown on click (all devices)
+    dropdownButton?.addEventListener("click", (e) => {
+        e.stopPropagation();
         dropdownMenu?.classList.toggle("is-active");
+        dropdownButton?.classList.toggle("dropdown-open");
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener("click", (e) => {
+        if (!dropdownButton?.contains(e.target as Node)) {
+            dropdownMenu?.classList.remove("is-active");
+            dropdownButton?.classList.remove("dropdown-open");
+        }
+    });
+
+    // Clean up dropdown on window resize
+    window.addEventListener("resize", () => {
+        dropdownMenu?.classList.remove("is-active");
+        dropdownButton?.classList.remove("dropdown-open");
     });
 </script>

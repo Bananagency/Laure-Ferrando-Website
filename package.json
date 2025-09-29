@@ -10,15 +10,15 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/node": "9.2.1",
-    "@astrojs/vue": "5.0.11",
-    "@fontsource/lato": "^5.1.1",
-    "@fontsource/libre-baskerville": "^5.1.1",
+    "@astrojs/node": "9.4.3",
+    "@astrojs/vue": "5.1.1",
+    "@emailjs/browser": "^4.4.1",
+    "@fontsource/lato": "^5.2.7",
+    "@fontsource/libre-baskerville": "^5.2.8",
     "@nanostores/vue": "^0.11.0",
-    "astro": "5.7.7",
+    "astro": "5.13.9",
     "nanostores": "^1.0.1",
-    "sass": "^1.83.1",
-    "swiper": "^11.2.1",
-    "vue": "^3.5.13"
+    "sass": "^1.93.0",
+    "vue": "^3.5.21"
   }
 }

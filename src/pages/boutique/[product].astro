@@ -87,21 +87,22 @@ try {
 
 <style lang="scss">
     .Product {
-        max-width: 1280px;
+        max-width: 1128px;
         margin: 4rem auto;
         display: flex;
         flex-direction: row-reverse;
         width: max-content;
         gap: 6.75rem;
+        padding: 2rem;
 
         &__error {
-            background: #f8eaea;
-            border-radius: 1rem;
-            padding: 2rem;
+            background: white;
+            border-radius: 16px;
+            padding: 3rem 2rem;
             text-align: center;
             max-width: 500px;
             margin: 4rem auto;
-            box-shadow: 0 2px 12px #0001;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -109,29 +110,31 @@ try {
 
             &__icon {
                 display: block;
-                margin: 0 auto 1rem auto;
+                margin: 0 auto 1.5rem auto;
             }
             &__title {
                 color: #b71c1c;
-                font-size: 1.5rem;
-                margin-bottom: 0.5rem;
+                font-size: 1.8rem;
+                font-weight: 600;
+                margin-bottom: 1rem;
             }
             &__msg {
                 color: #a94442;
-                margin: 0 auto 1.5rem auto;
+                margin: 0 auto 2rem auto;
+                line-height: 1.6;
             }
             &__back {
-                color: #fff;
-                background: #b39966;
-                padding: 0.75rem 2rem;
-                border-radius: 2rem;
+                color: white;
+                background: linear-gradient(135deg, var(--accent-color), #007bff);
+                padding: 1rem 2rem;
+                border-radius: 8px;
                 text-decoration: none;
-                font-weight: bold;
+                font-weight: 600;
                 display: inline-block;
-                margin-top: 1.5rem;
-                transition: background 0.2s;
+                transition: all 0.3s ease;
                 &:hover {
-                    background: #a1864c;
+                    transform: translateY(-2px);
+                    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
                 }
             }
         }
@@ -142,14 +145,22 @@ try {
             flex-direction: column;
             gap: 2rem;
             &__title {
-                font-size: 2rem;
+                font-size: 2.2rem;
                 font-family: "Lato", sans-serif;
-                font-weight: 400;
+                font-weight: 600;
+                color: var(--text-color);
+                line-height: 1.2;
             }
             &__price {
-                font-size: 1.5rem;
+                font-size: 1.8rem;
                 font-family: "Lato", sans-serif;
-                font-weight: 300;
+                font-weight: 700;
+                color: var(--accent-color);
+            }
+            &__weight {
+                font-size: 1rem;
+                color: #6c757d;
+                font-weight: 500;
             }
             &__boutons {
                 display: flex;
@@ -172,8 +183,10 @@ try {
             }
             &__desc {
                 font-family: "Lato", sans-serif;
-                font-size: 1rem;
-                font-weight: 300;
+                font-size: 1.1rem;
+                font-weight: 400;
+                line-height: 1.7;
+                color: #495057;
             }
         }
         &__carrousel {
@@ -181,6 +194,8 @@ try {
                 width: 548px;
                 height: 496px;
                 object-fit: contain;
+                border-radius: 12px;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
             }
         }
         @media screen and (max-width: 992px) {

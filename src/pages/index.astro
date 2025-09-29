@@ -1,8 +1,24 @@
 ---
-import Slider from "../components/reactive/Slider.vue";
+import Masonry from "../components/reactive/Masonry.vue";
 import Layout from "../layouts/Layout.astro";
+
+const fetchUrl = `https://admin.laure-ferrando.com/wp-json/wp/v2/travail`;
+const response = await fetch(fetchUrl);
+const data = await response.json();
+
+// Transform data for the Vue component
+const images = data && data.length > 0 ? data.map((item: any) => ({
+    url: item.acf.oeuvre.url,
+    alt: item.title?.rendered || "Œuvre d'art",
+    title: item.title?.rendered || "Sans titre",
+    description: item.acf.description || ""
+})) : [];
 ---
 
 <Layout>
-    <Slider client:only/>
+        {
+        images.length > 0 ? (
+            <Masonry images={images} client:load />
+        ) : null
+    }
 </Layout>

@@ -29,11 +29,26 @@ const addToCart = () => {
 
 <style lang="scss" scoped>
 .Bouton {
-    padding: 1rem 0;
+    padding: 1rem 2rem;
     cursor: pointer;
     border: none;
-    font-size: 1rem;
-    color: #f3f1ed;
-    background-color: #b39966;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: white;
+    background: linear-gradient(135deg, var(--accent-color) 0%, #007bff 100%);
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    width: 100%;
+    
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
+    
+    &:active {
+        transform: translateY(0);
+    }
 }
 </style>

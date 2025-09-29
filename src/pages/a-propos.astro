@@ -3,9 +3,13 @@ import Layout from "../layouts/Layout.astro";
 ---
 
 <Layout title="À propos">
-    <div class="divider">
     <main class="About">
         <h1 class="About__title">Parcours</h1>
+        
+        <div class="About__image">
+            <img src="https://laure-ferrando.com/wp-content/uploads/2023/03/photo-laure.jpg" alt="Photo de Laure Ferrando">
+        </div>
+        
         <p class="About__paragraph">
             Laure Ferrando est né dans le sud de la France à Aix-en-Provence en
             1976. En 2001 elle obtient une licence d'Arts plastiques de
@@ -73,47 +77,270 @@ import Layout from "../layouts/Layout.astro";
             </ul>
         </div>
     </main>
-    <aside class="About__image">
-        <img src="https://laure-ferrando.com/wp-content/uploads/2023/03/photo-laure.jpg" alt="Photo de Laure Ferrando">
-    </aside>
-</div>
 </Layout>
 
 <style lang="scss">
     .About {
-        padding: 2rem;
-        &__paragraph {
-            margin: 1rem 0;
+        min-height: 100vh;
+        background: white;
+        max-width: 900px;
+        margin: 0 auto;
+        border-radius: 16px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        padding: 3rem 2.5rem;
+        position: relative;
+        overflow: hidden;
+        
+        &::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-color), #007bff, var(--accent-color));
         }
-        &__expositions {
-            &__list {
-                &__item {
-                    margin: 1rem 0;
+        
+        &__title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-color);
+            margin-bottom: 2rem;
+            position: relative;
+            text-align: center;
+            
+            &::after {
+                content: '';
+                position: absolute;
+                bottom: -12px;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 80px;
+                height: 3px;
+                background: var(--accent-color);
+                border-radius: 2px;
+            }
+        }
+        
+        &__paragraph {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #495057;
+            margin: 2rem 0;
+            text-align: justify;
+            position: relative;
+            padding-left: 1rem;
+            border-left: 3px solid transparent;
+            transition: all 0.3s ease;
+            
+            &:hover {
+                border-left-color: var(--accent-color);
+                background: rgba(var(--accent-color-rgb), 0.02);
+                padding-left: 1.5rem;
+            }
+            
+            &:first-of-type {
+                font-size: 1.2rem;
+                font-weight: 500;
+                color: var(--text-color);
+                background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+                padding: 1.5rem;
+                border-radius: 8px;
+                border-left: none;
+                clear: both;
+                
+                &:hover {
+                    border-left: none;
+                    padding-left: 1.5rem;
                 }
             }
         }
+        
+        &__expositions {
+            margin-top: 3rem;
+            padding: 2rem;
+            background: #f8f9fa;
+            border-radius: 12px;
+            border: 1px solid #e9ecef;
+            
+            &__title {
+                font-size: 1.8rem;
+                font-weight: 600;
+                color: var(--text-color);
+                margin-bottom: 1.5rem;
+                text-align: center;
+                position: relative;
+                
+                &::after {
+                    content: '';
+                    position: absolute;
+                    bottom: -8px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    width: 60px;
+                    height: 2px;
+                    background: var(--accent-color);
+                    border-radius: 1px;
+                }
+            }
+            
+            &__list {
+                display: grid;
+                gap: 1.5rem;
+                margin-top: 2rem;
+                
+                &__item {
+                    background: white;
+                    padding: 1.5rem;
+                    border-radius: 8px;
+                    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+                    border-left: 4px solid var(--accent-color);
+                    transition: all 0.3s ease;
+                    
+                    &:hover {
+                        transform: translateY(-2px);
+                        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+                    }
+                    
+                    &__title {
+                        font-size: 1.1rem;
+                        font-weight: 600;
+                        color: var(--text-color);
+                        margin-bottom: 0.5rem;
+                        
+                        &:last-child {
+                            font-size: 0.95rem;
+                            font-weight: 400;
+                            color: #6c757d;
+                            margin-bottom: 0;
+                        }
+                    }
+                }
+            }
+        }
+        
         &__image {
-            padding: 0 2rem;
-            margin: 0 auto;
+            margin: 2rem auto 3rem auto;
+            text-align: center;
+            display: block;
+            width: fit-content;
+            
             img {
-                width: 100%;
+                max-width: 350px;
+                height: auto;
+                border-radius: 8px;
+                display: block;
+                margin: 0 auto;
             }
         }
     }
-    @media screen and (min-width: 992px) {
-        .divider {
-            display: flex;
-            max-width: 1280px;
-            margin: 4rem auto;
-            gap: 4rem;
-            .About {
-                flex: 1;
-                padding: 0;
-                &__image {
-                    flex: 1;
+
+    @media screen and (min-width: 768px) {
+        .About {
+            padding: 4rem 3rem;
+            margin: 2rem auto;
+            
+            &__title {
+                font-size: 3rem;
+                text-align: left;
+                
+                &::after {
+                    left: 0;
+                    transform: none;
                 }
             }
+            
+            &__image {
+                margin: 2rem auto 3rem auto;
+                max-width: 300px;
+                
+                img {
+                    max-width: 100%;
+                }
+            }
+            
+            &__paragraph {
+                font-size: 1.15rem;
+                
+                &:first-of-type {
+                    font-size: 1.25rem;
+                }
+            }
+            
+            &__expositions {
+                padding: 2.5rem;
+                clear: both;
+                
+                &__title {
+                    text-align: left;
+                    
+                    &::after {
+                        left: 0;
+                        transform: none;
+                    }
+                }
+                
+                &__list {
+                    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+                }
+            }
+        }
+    }
 
+    @media screen and (min-width: 992px) {
+        .About {
+            padding: 5rem 4rem;
+            margin: 4rem auto;
+            
+            &__title {
+                font-size: 3.5rem;
+                margin-bottom: 2.5rem;
+            }
+            
+            &__image {
+                max-width: 350px;
+                margin: 2rem auto 3rem auto;
+            }
+            
+            &__paragraph {
+                font-size: 1.2rem;
+                margin: 2.5rem 0;
+                
+                &:first-of-type {
+                    font-size: 1.3rem;
+                }
+            }
+            
+            &__expositions {
+                margin-top: 4rem;
+                padding: 3rem;
+                
+                &__title {
+                    font-size: 2rem;
+                }
+            }
+        }
+    }
+
+    @media screen and (min-width: 1200px) {
+        .About {
+            padding: 6rem 5rem;
+            
+            &__title {
+                font-size: 4rem;
+            }
+            
+            &__image {
+                max-width: 380px;
+            }
+            
+            &__paragraph {
+                font-size: 1.25rem;
+                
+                &:first-of-type {
+                    font-size: 1.35rem;
+                }
+            }
         }
     }
 </style>
