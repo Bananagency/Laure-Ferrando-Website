@@ -217,22 +217,27 @@ onMounted(() => {
 </template>
 
 <style lang="scss" scoped>
+$cart-side-width: 460px;
 .cart {
     margin-top: 4rem;
     min-height: 50vh;
     
     &__wrapper {
         width: 100%;
-        max-width: 1200px;
+        max-width: 1280px;
         margin: 0 auto;
         padding: 0 2rem;
     }
 
     &__header {
-        margin-bottom: 2rem;
+        margin-bottom: 3rem;
         
         h1 {
-            font-size: 2rem;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            text-align: center;
+            letter-spacing: -0.025em;
         }
     }
 
@@ -255,35 +260,76 @@ onMounted(() => {
     }
 
     &__summary {
-        background-color: #fafafa;
-        padding: 2rem;
-        border-radius: 4px;
+        background: linear-gradient(135deg, #ffffff 0%, #fafafa 100%);
+        padding: 2.5rem;
+        border-radius: 16px;
         height: fit-content;
+        box-shadow: 0 6px 25px rgba(0, 0, 0, 0.1);
+        border: 1px solid rgba(179, 153, 102, 0.1);
+        width: $cart-side-width;
+        max-width: $cart-side-width;
+        margin-left: auto;
+
+        @media screen and (max-width: 992px) {
+            width: 100%;
+            max-width: 100%;
+            margin-left: 0;
+        }
 
         h2 {
             margin-bottom: 1.5rem;
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: #2d2d2d;
+            position: relative;
+            padding-bottom: 0.75rem;
+
+            &::after {
+                content: '';
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                width: 60px;
+                height: 3px;
+                background: linear-gradient(90deg, #b39966, #d4c49a);
+                border-radius: 2px;
+            }
         }
 
         table {
                 width: 100%;
                 margin: 1rem 0;
                 border-collapse: collapse;
+                background-color: rgba(250, 250, 250, 0.5);
+                border-radius: 12px;
+                overflow: hidden;
 
                 tr {
-                    height: 48px;
+                    height: 56px;
                 
                     td {
+                        padding: 0 1.25rem;
+                        font-weight: 500;
+                        color: #4a4a4a;
                         &:last-child {
                             text-align: right;
-                    }
+                            font-weight: 600;
+                            color: #2d2d2d;
+                        }
                 }
 
                 &.total {
                     td {
-                        border-top: 1px solid black;
-                        font-weight: 900;
+                        border-top: none;
+                        font-weight: 700;
+                        font-size: 1.1rem;
                     }
                 }
+            }
+
+            tr.total {
+                background: linear-gradient(135deg, #b39966 0%, #d4c49a 100%);
+                td { color: #fff; }
             }
         }
 
@@ -315,13 +361,13 @@ onMounted(() => {
     }
 
     &__empty {
-        background: #f9f8f5;
-        border-radius: 1rem;
+        background: linear-gradient(135deg, #ffffff 0%, #fafafa 100%);
+        border-radius: 20px;
         padding: 4rem 2rem;
         text-align: center;
         margin: 2rem auto;
         max-width: 500px;
-        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
 
         &__content {
             display: flex;
@@ -335,11 +381,10 @@ onMounted(() => {
         }
 
         &__title {
-            font-size: 1.5rem;
-            color: #342d1f;
+            font-size: 1.75rem;
+            color: #2d2d2d;
             margin-bottom: 0.75rem;
-            font-family: 'Lato', sans-serif;
-            font-weight: 400;
+            font-weight: 700;
         }
 
         &__message {
@@ -350,22 +395,23 @@ onMounted(() => {
         }
 
         &__button {
-            background: #b39966;
+            background: linear-gradient(135deg, #b39966 0%, #d4c49a 100%);
             color: white;
             border: none;
-            padding: 0.75rem 2rem;
-            border-radius: 2rem;
+            padding: 1rem 2rem;
+            border-radius: 12px;
             text-decoration: none;
-            font-weight: 500;
+            font-weight: 600;
             display: inline-block;
             transition: all 0.3s ease;
-            font-size: 1rem;
+            font-size: 1.05rem;
             cursor: pointer;
+            box-shadow: 0 4px 15px rgba(179, 153, 102, 0.3);
+            text-transform: uppercase;
 
             &:hover {
-                background: darken(#b39966, 8%);
                 transform: translateY(-2px);
-                box-shadow: 0 4px 12px rgba(179, 153, 102, 0.2);
+                box-shadow: 0 8px 25px rgba(179, 153, 102, 0.4);
             }
         }
     }
@@ -392,18 +438,34 @@ onMounted(() => {
 
         &__content {
             position: relative;
-            background-color: #fff;
-            padding: 2rem;
-            border-radius: 4px;
+            background: linear-gradient(135deg, #ffffff 0%, #fafafa 100%);
+            padding: 2.5rem;
+            border-radius: 16px;
             max-width: 90%;
-            width: 500px;
+            width: $cart-side-width;
             max-height: 90vh;
             overflow-y: auto;
             z-index: 1;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
 
             h2 {
                 margin-bottom: 1.5rem;
-                font-size: 1.5rem;
+                font-size: 1.75rem;
+                font-weight: 600;
+                color: #2d2d2d;
+                position: relative;
+                padding-bottom: 0.75rem;
+
+                &::after {
+                    content: '';
+                    position: absolute;
+                    bottom: 0;
+                    left: 0;
+                    width: 60px;
+                    height: 3px;
+                    background: linear-gradient(90deg, #b39966, #d4c49a);
+                    border-radius: 2px;
+                }
             }
         }
 
@@ -468,47 +530,68 @@ onMounted(() => {
     &__actions {
         margin-top: 2rem;
         text-align: right;
+        width: 100%;
+        
+        // Aligne le bloc d'action sur la colonne de droite avec la même largeur que la modale
+        width: $cart-side-width;
+        max-width: $cart-side-width;
+        margin-left: auto;
+        
+        @media screen and (max-width: 992px) {
+            width: 100%;
+            max-width: 100%;
+        }
 
         &__button {
             display: inline-block;
-            padding: 1rem 2rem;
-            background-color: #b39966;
-            color: #f3f1ed;
+            padding: 1.25rem 2rem;
+            background: linear-gradient(135deg, #b39966 0%, #d4c49a 100%);
+            color: white;
             text-decoration: none;
-            font-size: 1rem;
+            font-size: 1.1rem;
             border: none;
             cursor: pointer;
-            transition: opacity 0.3s ease;
+            transition: all 0.3s ease;
+            width: 100%;
+            text-align: center;
 
             &:hover {
-                opacity: 0.9;
+                transform: translateY(-2px);
+                box-shadow: 0 8px 25px rgba(179, 153, 102, 0.4);
             }
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(179, 153, 102, 0.3);
+            letter-spacing: 0.025em;
+            text-transform: uppercase;
         }
     }
 }
 
 .cart__loading {
     text-align: center;
-    padding: 4rem 2rem;
+    padding: 5rem 2rem;
     color: #666;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 1rem;
+    gap: 2rem;
 
     p {
-        font-size: 1.1rem;
+        font-size: 1.2rem;
         margin: 0;
+        font-weight: 500;
+        color: #4a4a4a;
     }
 }
 
 .cart__loader {
-    width: 48px;
-    height: 48px;
-    border: 4px solid #f3f3f3;
+    width: 60px;
+    height: 60px;
+    border: 4px solid rgba(179, 153, 102, 0.1);
     border-top: 4px solid #b39966;
     border-radius: 50%;
     animation: spin 1s linear infinite;
+    box-shadow: 0 4px 15px rgba(179, 153, 102, 0.2);
 }
 
 @keyframes spin {

@@ -32,13 +32,7 @@ try {
 ---
 
 <script>
-    const buttonAddToCart = document?.querySelector("#addToCart");
-    const addToCart = () => {
-        const itemId = buttonAddToCart?.getAttribute("data-item-id") ?? "";
-        localStorage.setItem("cart", `[${itemId}]`);
-    };
-
-    buttonAddToCart?.addEventListener("click", () => addToCart());
+    // Feedback déplacé dans le composant AddToCartButton.vue
 </script>
 
 <Layout>

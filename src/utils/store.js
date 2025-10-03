@@ -89,6 +89,26 @@ export function addCartItem(id, name, image, price, weight) {
     updateTotals();
     storeLocalSession();
     console.log("🛒 État final du panier:", cart.get());
+
+    // Notification globale pour l'UI (feedback utilisateur)
+    if (typeof window !== 'undefined' && typeof window.dispatchEvent === 'function') {
+        try {
+            const addedItem = cart.get().find((i) => i.id === id);
+            window.dispatchEvent(new CustomEvent('cart:item-added', {
+                detail: {
+                    id,
+                    name,
+                    image,
+                    price,
+                    weight: weightAsNumber,
+                    quantity: addedItem ? addedItem.quantity : 1
+                }
+            }));
+        } catch (e) {
+            // Pas critique pour la logique métier; évite de briser l'ajout panier
+            console.warn('Impossible d\'émettre l\'évènement cart:item-added', e);
+        }
+    }
 }
 
 export function removeCartItem(id) {

@@ -75,39 +75,84 @@ const updateQuantity = () => {
 
 <style lang="scss" scoped>
 .Article {
-    border-bottom: 1px solid black;
-    padding: 1rem;
+    border-bottom: 1px solid rgba(232, 232, 232, 0.6);
+    padding: 1.25rem 0;
     display: flex;
     justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
 
     &__container {
         display: flex;
         gap: 1rem;
         &__image {
-            max-width: 96px;
+            width: 96px;
             height: 96px;
-            object-fit: contain;
+            object-fit: cover;
             background: #fafafa;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
         }
         &__infos {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+            
+            &__title {
+                font-size: 1rem;
+                font-weight: 600;
+                color: #2d2d2d;
+                line-height: 1.4;
+            }
+
+            &__price {
+                color: #b39966;
+                font-weight: 700;
+            }
             &__remove {
                 display: inline-block;
-                margin-top: 2rem;
+                margin-top: 0.5rem;
                 cursor: pointer;
+                color: #b39966;
+                font-weight: 500;
+                transition: color 0.2s ease;
                 &:hover {
                     text-decoration: underline;
+                    color: #9f885b;
                 }
             }
         }
     }
     &__board {
         &__quantity {
-            width: 96px;
+            width: 120px;
             display: flex;
             flex-direction: column;
             gap: 0.25rem;
+            
+            label {
+                font-size: 0.9rem;
+                color: #4a4a4a;
+                font-weight: 500;
+            }
             input[type="number"] {
-                padding: 0.5rem;
+                padding: 1rem 1.25rem;
+                border: 2px solid #e8e8e8;
+                border-radius: 12px;
+                font-size: 1rem;
+                background-color: #fff;
+                transition: all 0.3s ease;
+                font-family: inherit;
+                
+                &:focus {
+                    outline: none;
+                    border-color: #b39966;
+                    box-shadow: 0 0 0 3px rgba(179, 153, 102, 0.1);
+                }
+                
+                &:hover {
+                    border-color: #d0d0d0;
+                }
             }
             &__update {
                 margin-top: 0.5rem;

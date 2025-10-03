@@ -1,4 +1,5 @@
 <script setup>
+import { ref } from 'vue';
 import { addCartItem, cart } from "../../utils/store";
 
 const props = defineProps({
@@ -12,6 +13,9 @@ const props = defineProps({
     }
 });
 
+const showFeedback = ref(false);
+const feedbackText = ref('');
+
 const addToCart = () => {
     addCartItem(
         Number(props.id),
@@ -20,14 +24,29 @@ const addToCart = () => {
         Number(props.price),
         parseFloat(props.weight)
     );
+    feedbackText.value = 'Ajouté au panier ✔';
+    showFeedback.value = true;
+    setTimeout(() => {
+        showFeedback.value = false;
+    }, 2000);
 };
 </script>
 
 <template>
-    <button class="Bouton" @click="addToCart()">Ajouter au panier</button>
+    <div class="AddToCart">
+        <button class="Bouton" @click="addToCart()">Ajouter au panier</button>
+        <p v-if="showFeedback" class="Feedback">{{ feedbackText }}</p>
+    </div>
+    
 </template>
 
 <style lang="scss" scoped>
+.AddToCart {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
 .Bouton {
     padding: 1rem 2rem;
     cursor: pointer;
@@ -50,5 +69,11 @@ const addToCart = () => {
     &:active {
         transform: translateY(0);
     }
+}
+
+.Feedback {
+    font-size: 0.95rem;
+    color: #198754; /* green */
+    font-weight: 600;
 }
 </style>
